@@ -40,7 +40,6 @@ a:hover {
 
 body {
   background: radial-gradient(circle at center, var(--body-radial-color-1) 0%, var(--body-radial-color-2) 100%);
-  min-height : 100vh;
 }
 
 /* div[data-state="open"][aria-hidden="true"][data-aria-hidden="true"] {
@@ -165,12 +164,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 } */
 
-#root {
-  @apply sm:p-4 md:p-8 p-1;
-  /* max-width: 1280px; */
-  margin: 0 auto;
-  text-align: left;
-}
+
 
 
 
