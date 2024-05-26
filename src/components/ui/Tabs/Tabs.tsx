@@ -1,4 +1,6 @@
+import { cn } from "@/lib/utils";
 import { Children, FC, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import Noise from "./Noise";
 import Utils from "./utils";
 
 const Tabs = ({ children }: { children: ReactNode }) => {
@@ -64,7 +66,7 @@ const Tabs = ({ children }: { children: ReactNode }) => {
 
   return (
     <RevealProvider>
-      <div className="horizontal items-center justify-center">{Utils.clonedChildren}</div>
+      <div className="flex flex-col-reverse items-center justify-center">{Utils.clonedChildren}</div>
     </RevealProvider>
   );
 };
@@ -85,8 +87,14 @@ const TabTrigger = ({ children, value, onClick }: TabTriggerProps) => {
       data-selected={selected}
       onClick={onClick}
       data-value={value}
-      className="transition-all data-[selected=true]:bg-selected data-[selected=false]:text-neutral-500/30 hover:bg-neutral-900 active:ring-2 active:ring-offset-2 ring-offset-transparent text-sm font-normal active:ring-neutral-800 px-5 py-1 mx-2 text-white rounded-lg">
+      className={cn(
+        "relative text-sm font-normal px-5 py-1 mx-2 text-white transition-all ring-offset-transparent rounded-lg",
+        "hover:bg-neutral-900",
+        "data-[selected=true]:bg-selected data-[selected=false]:text-neutral-500/50",
+        "active:ring-2 active:ring-offset-2 active:ring-neutral-800"
+      )}>
       {children}
+      <Noise color={"rgb(115 115 115)"} />
     </button>
   );
 };

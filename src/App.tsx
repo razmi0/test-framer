@@ -8,17 +8,25 @@ function App() {
       <Section className="grid place-content-center">
         <Tabs>
           <TabNav>
-            <TabTrigger selected value="tab-1">
-              Tab 1
+            <TabTrigger selected value="urophylia">
+              Urophylia
             </TabTrigger>
-            <TabTrigger value="tab-2">Tab 2</TabTrigger>
-            {/* <TabTrigger value="tab-3">Tab 2</TabTrigger> */}
-            {/* <TabTrigger value="tab-4">Tab 2</TabTrigger> */}
+            <TabTrigger value="lupus">Lupus</TabTrigger>
+            <TabTrigger value="erotomania">Erotomania</TabTrigger>
+            <TabTrigger value="mythomania">Mythomania</TabTrigger>
           </TabNav>
-          <TabContent value="tab-1">Content 1</TabContent>
-          <TabContent value="tab-2">Content 2</TabContent>
-          {/* <TabContent value="tab-3">Content 3</TabContent> */}
-          {/* <TabContent value="tab-4">Content 4</TabContent> */}
+          <TabContent value="urophylia">
+            <div className="h-16 w-16 bg-cyan-600"></div>
+          </TabContent>
+          <TabContent value="lupus">
+            <div className="h-16 w-16 bg-cyan-700"></div>
+          </TabContent>
+          <TabContent value="erotomania">
+            <div className="h-16 w-16 bg-cyan-800"></div>
+          </TabContent>
+          <TabContent value="mythomania">
+            <div className="h-16 w-16 bg-cyan-900"></div>
+          </TabContent>
         </Tabs>
       </Section>
     </>
