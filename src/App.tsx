@@ -19,13 +19,13 @@ function App() {
             <div className="h-16 w-16 bg-cyan-600"></div>
           </TabContent>
           <TabContent value="lupus">
-            <div className="h-16 w-16 bg-cyan-700"></div>
+            <div className="h-16 w-16 bg-red-700"></div>
           </TabContent>
           <TabContent value="erotomania">
-            <div className="h-16 w-16 bg-cyan-800"></div>
+            <div className="h-16 w-16 bg-green-800"></div>
           </TabContent>
           <TabContent value="mythomania">
-            <div className="h-16 w-16 bg-cyan-900"></div>
+            <div className="h-16 w-16 bg-yellow-900"></div>
           </TabContent>
         </Tabs>
       </Section>
