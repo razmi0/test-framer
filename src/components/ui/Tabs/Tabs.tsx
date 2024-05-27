@@ -97,7 +97,6 @@ type TabTriggerProps = {
 
 const TabTrigger = ({ children, value, onClick }: TabTriggerProps) => {
   const { getSelected } = Utils.useTabsContext();
-  const [mounting, setMounting] = useState(true);
   const selected = getSelected(value);
   const ref = useRef<HTMLButtonElement>(null);
 
@@ -113,8 +112,6 @@ const TabTrigger = ({ children, value, onClick }: TabTriggerProps) => {
     setPositions();
     onClick && onClick();
   };
-
-  useEffect(() => setMounting(false), []);
 
   return (
     <button
