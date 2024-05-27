@@ -572,10 +572,6 @@ video {
   inset: 1px;
 }
 
-.left-2{
-  left: 0.5rem;
-}
-
 .z-\[1\]{
   z-index: 1;
 }
@@ -608,12 +604,12 @@ video {
   width: 100vw;
 }
 
-.transform{
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
 .flex-col-reverse{
   flex-direction: column-reverse;
+}
+
+.flex-wrap{
+  flex-wrap: wrap;
 }
 
 .place-content-center{
@@ -644,38 +640,18 @@ video {
   border-radius: 0.375rem;
 }
 
-.bg-cyan-600{
-  --tw-bg-opacity: 1;
-  background-color: rgb(8 145 178 / var(--tw-bg-opacity));
-}
-
-.bg-green-800{
-  --tw-bg-opacity: 1;
-  background-color: rgb(22 101 52 / var(--tw-bg-opacity));
-}
-
-.bg-red-700{
-  --tw-bg-opacity: 1;
-  background-color: rgb(185 28 28 / var(--tw-bg-opacity));
-}
-
 .bg-selected{
   background-color: hsla(0,0%,100%,.05);
 }
 
-.bg-yellow-900{
-  --tw-bg-opacity: 1;
-  background-color: rgb(113 63 18 / var(--tw-bg-opacity));
+.px-2{
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .px-5{
   padding-left: 1.25rem;
   padding-right: 1.25rem;
-}
-
-.px-\[8px\]{
-  padding-left: 8px;
-  padding-right: 8px;
 }
 
 .py-1{
@@ -697,6 +673,51 @@ video {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.ring-1{
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+.ring-blue-600{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(37 99 235 / var(--tw-ring-opacity));
+}
+
+.ring-cyan-600{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(8 145 178 / var(--tw-ring-opacity));
+}
+
+.ring-green-800{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(22 101 52 / var(--tw-ring-opacity));
+}
+
+.ring-pink-800{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(157 23 77 / var(--tw-ring-opacity));
+}
+
+.ring-purple-700{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(126 34 206 / var(--tw-ring-opacity));
+}
+
+.ring-red-700{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(185 28 28 / var(--tw-ring-opacity));
+}
+
+.ring-yellow-900{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(113 63 18 / var(--tw-ring-opacity));
+}
+
+.ring-offset-1{
+  --tw-ring-offset-width: 1px;
+}
+
 .ring-offset-transparent{
   --tw-ring-offset-color: transparent;
 }
@@ -711,18 +732,6 @@ video {
   transition-duration: 150ms;
 }
 
-.delay-100{
-  transition-delay: 100ms;
-}
-
-.delay-1000{
-  transition-delay: 1000ms;
-}
-
-.ease-in{
-  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
-}
-
 @keyframes enter{
   from{
     opacity: var(--tw-enter-opacity, 1);
@@ -735,22 +744,6 @@ video {
     opacity: var(--tw-exit-opacity, 1);
     transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0) scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1)) rotate(var(--tw-exit-rotate, 0));
   }
-}
-
-.delay-100{
-  animation-delay: 100ms;
-}
-
-.delay-1000{
-  animation-delay: 1000ms;
-}
-
-.ease-in{
-  animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
-}
-
-.\[transition-timing-function_\:_cubic-bezier\(\.69\2c \.28\2c \.75\2c 1\.22\)\]{
-  transition-timing-function_: cubic-bezier(.69,.28,.75,1.22);
 }
 
 :root {
@@ -1002,6 +995,51 @@ th{
   }
 }
 
+/* SAFELIST */
+
+/* { color: "cyan-600", value: "urophylia" },
+  { color: "red-700", value: "lupus" },
+  { color: "green-800", value: "erotomania" },
+  { color: "yellow-900", value: "mythomania" },
+  { color: "blue-600", value: "dyslexia" },
+  { color: "purple-700", value: "dyscalculia" },
+  { color: "pink-800", value: "dysgraphia" }, */
+
+.bg-urophylia {
+  --tw-bg-opacity: 1;
+  background-color: rgba(59, 130, 246, var(--tw-bg-opacity));
+}
+
+.bg-lupus {
+  --tw-bg-opacity: 1;
+  background-color: rgba(220, 38, 38, var(--tw-bg-opacity));
+}
+
+.bg-erotomania {
+  --tw-bg-opacity: 1;
+  background-color: rgba(72, 187, 120, var(--tw-bg-opacity));
+}
+
+.bg-mythomania {
+  --tw-bg-opacity: 1;
+  background-color: rgba(251, 191, 36, var(--tw-bg-opacity));
+}
+
+.bg-dyslexia {
+  --tw-bg-opacity: 1;
+  background-color: rgba(59, 130, 246, var(--tw-bg-opacity));
+}
+
+.bg-dyscalculia {
+  --tw-bg-opacity: 1;
+  background-color: rgba(135, 94, 245, var(--tw-bg-opacity));
+}
+
+.bg-dysgraphia {
+  --tw-bg-opacity: 1;
+  background-color: rgba(222, 99, 175, var(--tw-bg-opacity));
+}
+
 .hover\:bg-neutral-900:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(23 23 23 / var(--tw-bg-opacity));
@@ -1022,20 +1060,43 @@ th{
   --tw-ring-offset-width: 2px;
 }
 
-.data-\[selected\=true\]\:bg-selected[data-selected=true]{
-  background-color: hsla(0,0%,100%,.05);
-}
-
-.data-\[selected\=true\]\:bg-selected\/50[data-selected=true]{
-  background-color: hsla(0, 0%, 100%, 0.5);
-}
-
-.data-\[selected\=true\]\:bg-selected\/10[data-selected=true]{
-  background-color: hsla(0, 0%, 100%, 0.1);
-}
-
 .data-\[selected\=false\]\:text-neutral-500\/50[data-selected=false]{
   color: rgb(115 115 115 / 0.5);
+}
+
+.data-\[index\=\'0\'\]\:ring-cyan-600[data-index='0']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(8 145 178 / var(--tw-ring-opacity));
+}
+
+.data-\[index\=\'1\'\]\:ring-red-700[data-index='1']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(185 28 28 / var(--tw-ring-opacity));
+}
+
+.data-\[index\=\'2\'\]\:ring-green-800[data-index='2']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(22 101 52 / var(--tw-ring-opacity));
+}
+
+.data-\[index\=\'3\'\]\:ring-yellow-900[data-index='3']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(113 63 18 / var(--tw-ring-opacity));
+}
+
+.data-\[index\=\'4\'\]\:ring-blue-600[data-index='4']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(37 99 235 / var(--tw-ring-opacity));
+}
+
+.data-\[index\=\'5\'\]\:ring-purple-700[data-index='5']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(126 34 206 / var(--tw-ring-opacity));
+}
+
+.data-\[index\=\'6\'\]\:ring-pink-800[data-index='6']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(157 23 77 / var(--tw-ring-opacity));
 }
 
 .hover\:data-\[selected\=false\]\:text-neutral-500[data-selected=false]:hover{

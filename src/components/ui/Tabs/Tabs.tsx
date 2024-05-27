@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import type { FC, ReactNode } from "react";
+import type { FC, HTMLAttributes, ReactNode } from "react";
 import { Children, useEffect, useMemo, useRef, useState } from "react";
 import type { RevealType } from "./utils";
 import Utils from "./utils";
@@ -35,13 +35,17 @@ const Tabs = ({ children }: { children: ReactNode }) => {
             if (!value) return trigger;
 
             selected && (defaultSelected = i);
-            const toggle = () => {
-              toggleReveal(i);
-            };
+            const toggle = () => toggleReveal(i);
+            const userOnclick = trigger.props.onClick;
             Utils.lookupValues.set(value, i);
 
             return (
-              <TabTrigger {...trigger.props} onClick={toggle}>
+              <TabTrigger
+                {...trigger.props}
+                onClick={() => {
+                  toggle();
+                  userOnclick && userOnclick();
+                }}>
                 {children}
               </TabTrigger>
             );
@@ -49,9 +53,7 @@ const Tabs = ({ children }: { children: ReactNode }) => {
 
           return <TabNav {...child.props}>{navChildren}</TabNav>;
         }
-        case "TabContent": {
-          return child;
-        }
+
         default:
           return child;
       }
@@ -88,20 +90,22 @@ const Tabs = ({ children }: { children: ReactNode }) => {
 
 Tabs.displayName = "Tabs";
 
-type TabTriggerProps = {
+interface TabTriggerProps extends HTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   value: string;
   onClick?: () => void;
   selected?: boolean;
-};
+  className?: string;
+}
 
-const TabTrigger = ({ children, value, onClick }: TabTriggerProps) => {
+const TabTrigger = ({ children, value, onClick, className, ...props }: TabTriggerProps) => {
   const { getSelected } = Utils.useTabsContext();
   const selected = getSelected(value);
   const ref = useRef<HTMLButtonElement>(null);
 
   const handleOnCLick = () => {
     Utils.positions.update(ref);
+    Utils.clickedFirst = true;
     onClick && onClick();
   };
 
@@ -113,11 +117,14 @@ const TabTrigger = ({ children, value, onClick }: TabTriggerProps) => {
       onMouseDown={handleOnCLick}
       data-value={value}
       className={cn(
-        "relative text-sm font-normal px-5 py-1 text-white transition-all ring-offset-transparent rounded-lg",
+        "relative text-sm font-normal px-5 py-1 text-white transition-all ring-offset-transparent rounded-lg flex items-center justify-center",
         "hover:bg-neutral-900",
-        "data-[selected=false]:text-neutral-500/50 hover:data-[selected=false]:text-neutral-500 data-[selected=true]:bg-selected",
-        "active:ring-2 active:ring-offset-2 active:ring-neutral-800"
-      )}>
+        "data-[selected=false]:text-neutral-500/50 hover:data-[selected=false]:text-neutral-500",
+        !Utils.clickedFirst && selected && "bg-selected",
+        "active:ring-2 active:ring-offset-2 active:ring-neutral-800",
+        className
+      )}
+      {...props}>
       {children}
     </button>
   );
@@ -125,16 +132,18 @@ const TabTrigger = ({ children, value, onClick }: TabTriggerProps) => {
 
 TabTrigger.displayName = "TabTrigger";
 
-type TabContentProps = {
+interface TabContentProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   value: string;
-};
-const TabContent = ({ children, value }: TabContentProps) => {
+  className?: string;
+}
+
+const TabContent = ({ children, value, className, ...props }: TabContentProps) => {
   const selected = Utils.useTabsContext().getSelected(value);
   return (
     <>
       {selected && (
-        <div data-selected={selected} data-value={value} className="mt-8">
+        <div {...props} data-selected={selected} data-value={value} className={cn("mt-8", className)}>
           {children}
         </div>
       )}
@@ -144,42 +153,18 @@ const TabContent = ({ children, value }: TabContentProps) => {
 
 TabContent.displayName = "TabContent";
 
-const TabNav = ({ children }: { children: ReactNode }) => {
-  const navRef = useRef<HTMLDivElement>(null);
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const paddings = "px-[8px] py-1";
+interface TabNavProps extends HTMLAttributes<HTMLDivElement> {
+  children: ReactNode;
+  className?: string;
+}
 
+const TabNav = ({ children, className, ...props }: TabNavProps) => {
   return (
     <>
-      {Utils.positions.current.width !== 0 && (
-        <style>
-          {`
-        .slide {
-          animation: slide 0.150s cubic-bezier(.69,.28,.75,1.22) forwards;
-        }
-        
-        @keyframes slide {
-          0% {
-            left: ${Utils.positions.past.left}px;
-            width: ${Utils.positions.past.width}px;
-          }
-          100% {
-            left: ${Utils.positions.current.left}px;
-            width: ${Utils.positions.current.width}px;
-          }
-        }
-      `}
-        </style>
-      )}
-
-      <div className={cn(`relative flex gap-3 items-center justify-center rounded-md`, paddings)} ref={navRef}>
+      <div
+        className={cn(`relative flex-wrap flex gap-3 items-center justify-center rounded-md px-2 py-1`, className)}
+        {...props}>
         {children}
-
-        {Utils.positions.current.width !== 0 && (
-          <div
-            ref={sliderRef}
-            className={cn(`absolute h-7 bg-selected rounded-md pointer-events-none slide`, paddings)}></div>
-        )}
       </div>
     </>
   );
@@ -187,5 +172,45 @@ const TabNav = ({ children }: { children: ReactNode }) => {
 
 TabNav.displayName = "TabNav";
 
+interface TabSliderProps extends HTMLAttributes<HTMLDivElement> {
+  className?: string;
+}
+const TabSlider = ({ className, ...props }: TabSliderProps) => {
+  const { reveals } = Utils.useTabsContext();
+  if (Utils.positions.current.width === 0) return <></>;
+  return (
+    <>
+      <style>
+        {`
+        .slide {
+          animation: slide ${Utils.animateVars.duration} ${Utils.animateVars.timingFunction} forwards;
+        }
+        
+        @keyframes slide {
+          from {
+            left: ${Utils.positions.past.left}px;
+            top : ${Utils.positions.past.top}px;
+            width: ${Utils.positions.past.width}px;
+            height: ${Utils.positions.past.height}px;
+          }
+          to {
+            left: ${Utils.positions.current.left}px;
+            top : ${Utils.positions.current.top}px;
+            width: ${Utils.positions.current.width}px;
+            height: ${Utils.positions.current.height}px;
+          }
+        }
+      `}
+      </style>
+      <div
+        data-index={reveals.index}
+        className={cn("absolute h-7 bg-selected rounded-md pointer-events-none slide", className)}
+        {...props}></div>
+    </>
+  );
+};
+
+TabSlider.displayName = "TabSlider";
+
 export default Tabs;
-export { TabContent, TabNav, TabTrigger };
+export { TabContent, TabNav, TabSlider, TabTrigger };

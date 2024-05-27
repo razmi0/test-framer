@@ -1,36 +1,34 @@
 import Section from "./components/Section";
-import Tabs, { TabContent, TabNav, TabTrigger } from "./components/ui/Tabs/Tabs";
+import Tabs, { TabContent, TabNav, TabSlider, TabTrigger } from "./components/ui/Tabs/Tabs";
+import { cn } from "./lib/utils";
 
-function App() {
+const values = ["urophylia", "lupus", "erotomania", "mythomania", "dyslexia", "dyscalculia", "dysgraphia"];
+const sliderRings = ["cyan-600", "red-700", "green-800", "yellow-900", "blue-600", "purple-700", "pink-800"].map(
+  (color, i) => `data-[index='${i}']:ring-${color}`
+);
+
+const App = () => {
   return (
     <>
-      <div />
       <Section className="grid place-content-center">
         <Tabs>
           <TabNav>
-            <TabTrigger value="urophylia">Urophylia</TabTrigger>
-            <TabTrigger value="lupus">Lupus</TabTrigger>
-            <TabTrigger value="erotomania">Erotomania</TabTrigger>
-            <TabTrigger selected value="mythomania">
-              Mythomania
-            </TabTrigger>
+            {values.map((value, i) => (
+              <TabTrigger key={i} value={value}>
+                {value.charAt(0).toUpperCase() + value.slice(1)}
+              </TabTrigger>
+            ))}
+            <TabSlider className={cn("ring-1 ring-offset-1 ring-offset-transparent", sliderRings)} />
           </TabNav>
-          <TabContent value="urophylia">
-            <div className="h-16 w-16 bg-cyan-600"></div>
-          </TabContent>
-          <TabContent value="lupus">
-            <div className="h-16 w-16 bg-red-700"></div>
-          </TabContent>
-          <TabContent value="erotomania">
-            <div className="h-16 w-16 bg-green-800"></div>
-          </TabContent>
-          <TabContent value="mythomania">
-            <div className="h-16 w-16 bg-yellow-900"></div>
-          </TabContent>
+          {values.map((value, i) => (
+            <TabContent key={i} value={value}>
+              <div className={`h-16 w-16 bg-${value}`}></div>
+            </TabContent>
+          ))}
         </Tabs>
       </Section>
     </>
   );
-}
+};
 
 export default App;

@@ -33,6 +33,7 @@ type TabContextType = {
 
 type PositionType = {
   left: number;
+  top: number;
   width: number;
   height: number;
 };
@@ -43,8 +44,8 @@ type PositionsType = {
   update: (elementRef: RefObject<HTMLButtonElement> | null) => void;
 };
 const positions: PositionsType = {
-  past: { left: 0, width: 0, height: 0 },
-  current: { left: 0, width: 0, height: 0 },
+  past: { left: 0, top: 0, width: 0, height: 0 },
+  current: { left: 0, top: 0, width: 0, height: 0 },
   update: function (elementRef: RefObject<HTMLButtonElement> | null) {
     const element = elementRef?.current;
     if (!element) return;
@@ -52,11 +53,18 @@ const positions: PositionsType = {
       left: element.offsetLeft,
       width: element.offsetWidth,
       height: element.offsetHeight,
+      top: element.offsetTop,
     };
     this.past = this.current;
     this.current = newValues;
   },
 };
+
+const animateVars = {
+  timingFunction: "cubic-bezier(.69,.28,.75,1.22)",
+  duration: "0.150s",
+};
+
 const TabsContext = createContext<TabContextType>({
   getSelected: () => false,
   reveals: { reveals: [], index: 0, pastIndex: 0 },
@@ -70,6 +78,8 @@ const useTabsContext = () => {
 let clonedChildren: ReactNode;
 const lookupValues = new Map<string, number>();
 
+let clickedFirst = false;
+
 const Utils = {
   getComponentDisplayName,
   validAndHasProps,
@@ -79,6 +89,8 @@ const Utils = {
   clonedChildren,
   useTabsContext,
   positions,
+  animateVars,
+  clickedFirst,
 };
 
 export default Utils;

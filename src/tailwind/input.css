@@ -231,3 +231,51 @@ th {
     transform: scale(1);
   }
 }
+
+
+
+
+/* SAFELIST */
+/* { color: "cyan-600", value: "urophylia" },
+  { color: "red-700", value: "lupus" },
+  { color: "green-800", value: "erotomania" },
+  { color: "yellow-900", value: "mythomania" },
+  { color: "blue-600", value: "dyslexia" },
+  { color: "purple-700", value: "dyscalculia" },
+  { color: "pink-800", value: "dysgraphia" }, */
+
+
+.bg-urophylia {
+  --tw-bg-opacity: 1;
+  background-color: rgba(59, 130, 246, var(--tw-bg-opacity));
+}
+
+.bg-lupus {
+  --tw-bg-opacity: 1;
+  background-color: rgba(220, 38, 38, var(--tw-bg-opacity));
+}
+
+.bg-erotomania {
+  --tw-bg-opacity: 1;
+  background-color: rgba(72, 187, 120, var(--tw-bg-opacity));
+}
+
+.bg-mythomania {
+  --tw-bg-opacity: 1;
+  background-color: rgba(251, 191, 36, var(--tw-bg-opacity));
+}
+
+.bg-dyslexia {
+  --tw-bg-opacity: 1;
+  background-color: rgba(59, 130, 246, var(--tw-bg-opacity));
+}
+
+.bg-dyscalculia {
+  --tw-bg-opacity: 1;
+  background-color: rgba(135, 94, 245, var(--tw-bg-opacity));
+}
+
+.bg-dysgraphia {
+  --tw-bg-opacity: 1;
+  background-color: rgba(222, 99, 175, var(--tw-bg-opacity));
+}
