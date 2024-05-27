@@ -1,4 +1,4 @@
-import type { ComponentType, FunctionComponent, PropsWithChildren, ReactElement, ReactNode } from "react";
+import type { ComponentType, FunctionComponent, PropsWithChildren, ReactElement, ReactNode, RefObject } from "react";
 import { createContext, isValidElement, useContext } from "react";
 
 const getComponentDisplayName = (element: ReactElement<any>) => {
@@ -20,13 +20,7 @@ const buildReveals = ({ size, trueAt }: { size: number; trueAt?: number | null }
   if (typeof trueAt === "number" && (trueAt >= 0 || trueAt < reveals.length)) reveals[trueAt] = true;
   return reveals;
 };
-export type Spacing = {
-  gap: number;
-  widths: {
-    width: number;
-    height: number;
-  }[];
-};
+
 export type RevealType = {
   reveals: boolean[];
   index: number;
@@ -37,9 +31,31 @@ type TabContextType = {
   reveals: RevealType;
 };
 
-const positions = {
-  past: { left: 0, width: 0 },
-  current: { left: 0, width: 0 },
+type PositionType = {
+  left: number;
+  width: number;
+  height: number;
+};
+
+type PositionsType = {
+  past: PositionType;
+  current: PositionType;
+  update: (elementRef: RefObject<HTMLButtonElement> | null) => void;
+};
+const positions: PositionsType = {
+  past: { left: 0, width: 0, height: 0 },
+  current: { left: 0, width: 0, height: 0 },
+  update: function (elementRef: RefObject<HTMLButtonElement> | null) {
+    const element = elementRef?.current;
+    if (!element) return;
+    const newValues = {
+      left: element.offsetLeft,
+      width: element.offsetWidth,
+      height: element.offsetHeight,
+    };
+    this.past = this.current;
+    this.current = newValues;
+  },
 };
 const TabsContext = createContext<TabContextType>({
   getSelected: () => false,

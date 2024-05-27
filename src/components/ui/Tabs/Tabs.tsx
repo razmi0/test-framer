@@ -100,16 +100,8 @@ const TabTrigger = ({ children, value, onClick }: TabTriggerProps) => {
   const selected = getSelected(value);
   const ref = useRef<HTMLButtonElement>(null);
 
-  const setPositions = () => {
-    const left = ref.current?.offsetLeft || 0;
-    const width = ref.current?.offsetWidth || 0;
-
-    Utils.positions.past = Utils.positions.current;
-    Utils.positions.current = { left, width };
-  };
-
   const handleOnCLick = () => {
-    setPositions();
+    Utils.positions.update(ref);
     onClick && onClick();
   };
 
@@ -118,7 +110,7 @@ const TabTrigger = ({ children, value, onClick }: TabTriggerProps) => {
       ref={ref}
       key={value}
       data-selected={selected}
-      onClick={handleOnCLick}
+      onMouseDown={handleOnCLick}
       data-value={value}
       className={cn(
         "relative text-sm font-normal px-5 py-1 text-white transition-all ring-offset-transparent rounded-lg",
