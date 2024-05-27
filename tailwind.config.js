@@ -11,10 +11,18 @@ module.exports = {
         "2xl": "1400px",
       },
     },
+
     extend: {
       colors: {
         fore: "rgb(22,23,22)",
         selected: "hsla(0,0%,100%,.05)",
+        urophylia: "#0e7490",
+        lupus: "#b91c1c",
+        erotomania: "#166534",
+        mythomania: "#fde047",
+        dyslexia: "#2563eb",
+        dyscalculia: "#7e22ce",
+        dysgraphia: "#be185d",
       },
       keyframes: {
         "accordion-down": {

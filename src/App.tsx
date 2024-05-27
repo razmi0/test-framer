@@ -3,9 +3,6 @@ import Tabs, { TabContent, TabNav, TabSlider, TabTrigger } from "./components/ui
 import { cn } from "./lib/utils";
 
 const values = ["urophylia", "lupus", "erotomania", "mythomania", "dyslexia", "dyscalculia", "dysgraphia"];
-const sliderRings = ["cyan-600", "red-700", "green-800", "yellow-900", "blue-600", "purple-700", "pink-800"].map(
-  (color, i) => `data-[index='${i}']:ring-${color}`
-);
 
 const App = () => {
   return (
@@ -18,7 +15,12 @@ const App = () => {
                 {value.charAt(0).toUpperCase() + value.slice(1)}
               </TabTrigger>
             ))}
-            <TabSlider className={cn("ring-1 ring-offset-1 ring-offset-transparent", sliderRings)} />
+            <TabSlider
+              className={cn(
+                "ring-1 ring-offset-1 ring-offset-transparent",
+                values.map((value, i) => `data-[index='${i}']:ring-${value}`)
+              )}
+            />
           </TabNav>
           {values.map((value, i) => (
             <TabContent key={i} value={value}>

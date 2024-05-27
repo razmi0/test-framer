@@ -236,46 +236,75 @@ th {
 
 
 /* SAFELIST */
-/* { color: "cyan-600", value: "urophylia" },
-  { color: "red-700", value: "lupus" },
-  { color: "green-800", value: "erotomania" },
-  { color: "yellow-900", value: "mythomania" },
-  { color: "blue-600", value: "dyslexia" },
-  { color: "purple-700", value: "dyscalculia" },
-  { color: "pink-800", value: "dysgraphia" }, */
-
+/* 
+urophylia: "#0e7490",
+lupus: "#b91c1c",
+erotomania: "#166534",
+mythomania: "#fde047",
+dyslexia: "#2563eb",
+dyscalculia: "#7e22ce",
+dysgraphia: "#be185d", */
 
 .bg-urophylia {
-  --tw-bg-opacity: 1;
-  background-color: rgba(59, 130, 246, var(--tw-bg-opacity));
+  background-color: #0e7490;
+
+}
+
+.ring-urophylia {
+  --tw-ring-color: #0e7490;
 }
 
 .bg-lupus {
-  --tw-bg-opacity: 1;
-  background-color: rgba(220, 38, 38, var(--tw-bg-opacity));
+  background-color: #b91c1c;
+  
+}
+
+.ring-lupus {
+  --tw-ring-color: #b91c1c;
 }
 
 .bg-erotomania {
-  --tw-bg-opacity: 1;
-  background-color: rgba(72, 187, 120, var(--tw-bg-opacity));
+  background-color: #166534;
+  
+}
+
+.ring-erotomania {
+  --tw-ring-color: #166534;
 }
 
 .bg-mythomania {
-  --tw-bg-opacity: 1;
-  background-color: rgba(251, 191, 36, var(--tw-bg-opacity));
+  background-color: #fde047;
+  
+}
+
+.ring-mythomania {
+  --tw-ring-color: #fde047;
 }
 
 .bg-dyslexia {
-  --tw-bg-opacity: 1;
-  background-color: rgba(59, 130, 246, var(--tw-bg-opacity));
+  background-color: #2563eb;
+  
+}
+
+.ring-dyslexia {
+  --tw-ring-color: #2563eb;
 }
 
 .bg-dyscalculia {
-  --tw-bg-opacity: 1;
-  background-color: rgba(135, 94, 245, var(--tw-bg-opacity));
+  background-color: #7e22ce;
+  
+}
+
+.ring-dyscalculia {
+  --tw-ring-color: #7e22ce;
 }
 
 .bg-dysgraphia {
-  --tw-bg-opacity: 1;
-  background-color: rgba(222, 99, 175, var(--tw-bg-opacity));
+  background-color: #be185d;
+  
 }
+
+.ring-dysgraphia {
+  --tw-ring-color: #be185d;
+}
+

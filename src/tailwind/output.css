@@ -679,39 +679,39 @@ video {
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
-.ring-blue-600{
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(37 99 235 / var(--tw-ring-opacity));
-}
-
-.ring-cyan-600{
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(8 145 178 / var(--tw-ring-opacity));
-}
-
-.ring-green-800{
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(22 101 52 / var(--tw-ring-opacity));
-}
-
-.ring-pink-800{
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(157 23 77 / var(--tw-ring-opacity));
-}
-
-.ring-purple-700{
+.ring-dyscalculia{
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(126 34 206 / var(--tw-ring-opacity));
 }
 
-.ring-red-700{
+.ring-dysgraphia{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(190 24 93 / var(--tw-ring-opacity));
+}
+
+.ring-dyslexia{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(37 99 235 / var(--tw-ring-opacity));
+}
+
+.ring-erotomania{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(22 101 52 / var(--tw-ring-opacity));
+}
+
+.ring-lupus{
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(185 28 28 / var(--tw-ring-opacity));
 }
 
-.ring-yellow-900{
+.ring-mythomania{
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(113 63 18 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(253 224 71 / var(--tw-ring-opacity));
+}
+
+.ring-urophylia{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(14 116 144 / var(--tw-ring-opacity));
 }
 
 .ring-offset-1{
@@ -997,47 +997,69 @@ th{
 
 /* SAFELIST */
 
-/* { color: "cyan-600", value: "urophylia" },
-  { color: "red-700", value: "lupus" },
-  { color: "green-800", value: "erotomania" },
-  { color: "yellow-900", value: "mythomania" },
-  { color: "blue-600", value: "dyslexia" },
-  { color: "purple-700", value: "dyscalculia" },
-  { color: "pink-800", value: "dysgraphia" }, */
+/* 
+urophylia: "#0e7490",
+lupus: "#b91c1c",
+erotomania: "#166534",
+mythomania: "#fde047",
+dyslexia: "#2563eb",
+dyscalculia: "#7e22ce",
+dysgraphia: "#be185d", */
 
 .bg-urophylia {
-  --tw-bg-opacity: 1;
-  background-color: rgba(59, 130, 246, var(--tw-bg-opacity));
+  background-color: #0e7490;
+}
+
+.ring-urophylia {
+  --tw-ring-color: #0e7490;
 }
 
 .bg-lupus {
-  --tw-bg-opacity: 1;
-  background-color: rgba(220, 38, 38, var(--tw-bg-opacity));
+  background-color: #b91c1c;
+}
+
+.ring-lupus {
+  --tw-ring-color: #b91c1c;
 }
 
 .bg-erotomania {
-  --tw-bg-opacity: 1;
-  background-color: rgba(72, 187, 120, var(--tw-bg-opacity));
+  background-color: #166534;
+}
+
+.ring-erotomania {
+  --tw-ring-color: #166534;
 }
 
 .bg-mythomania {
-  --tw-bg-opacity: 1;
-  background-color: rgba(251, 191, 36, var(--tw-bg-opacity));
+  background-color: #fde047;
+}
+
+.ring-mythomania {
+  --tw-ring-color: #fde047;
 }
 
 .bg-dyslexia {
-  --tw-bg-opacity: 1;
-  background-color: rgba(59, 130, 246, var(--tw-bg-opacity));
+  background-color: #2563eb;
+}
+
+.ring-dyslexia {
+  --tw-ring-color: #2563eb;
 }
 
 .bg-dyscalculia {
-  --tw-bg-opacity: 1;
-  background-color: rgba(135, 94, 245, var(--tw-bg-opacity));
+  background-color: #7e22ce;
+}
+
+.ring-dyscalculia {
+  --tw-ring-color: #7e22ce;
 }
 
 .bg-dysgraphia {
-  --tw-bg-opacity: 1;
-  background-color: rgba(222, 99, 175, var(--tw-bg-opacity));
+  background-color: #be185d;
+}
+
+.ring-dysgraphia {
+  --tw-ring-color: #be185d;
 }
 
 .hover\:bg-neutral-900:hover{
@@ -1064,42 +1086,78 @@ th{
   color: rgb(115 115 115 / 0.5);
 }
 
-.data-\[index\=\'0\'\]\:ring-cyan-600[data-index='0']{
+.data-\[index\=0\]\:ring-urophylia[data-index=0]{
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(8 145 178 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(14 116 144 / var(--tw-ring-opacity));
 }
 
-.data-\[index\=\'1\'\]\:ring-red-700[data-index='1']{
+.data-\[index\=1\]\:ring-lupus[data-index=1]{
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(185 28 28 / var(--tw-ring-opacity));
 }
 
-.data-\[index\=\'2\'\]\:ring-green-800[data-index='2']{
+.data-\[index\=2\]\:ring-erotomania[data-index=2]{
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(22 101 52 / var(--tw-ring-opacity));
 }
 
-.data-\[index\=\'3\'\]\:ring-yellow-900[data-index='3']{
+.data-\[index\=3\]\:ring-mythomania[data-index=3]{
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(113 63 18 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(253 224 71 / var(--tw-ring-opacity));
 }
 
-.data-\[index\=\'4\'\]\:ring-blue-600[data-index='4']{
+.data-\[index\=4\]\:ring-dyslexia[data-index=4]{
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(37 99 235 / var(--tw-ring-opacity));
 }
 
-.data-\[index\=\'5\'\]\:ring-purple-700[data-index='5']{
+.data-\[index\=5\]\:ring-dyscalculia[data-index=5]{
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(126 34 206 / var(--tw-ring-opacity));
 }
 
-.data-\[index\=\'6\'\]\:ring-pink-800[data-index='6']{
+.data-\[index\=6\]\:ring-dysgraphia[data-index=6]{
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(157 23 77 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(190 24 93 / var(--tw-ring-opacity));
+}
+
+.data-\[index\=\'0\'\]\:ring-urophylia[data-index='0']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(14 116 144 / var(--tw-ring-opacity));
+}
+
+.data-\[index\=\'1\'\]\:ring-lupus[data-index='1']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(185 28 28 / var(--tw-ring-opacity));
+}
+
+.data-\[index\=\'2\'\]\:ring-erotomania[data-index='2']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(22 101 52 / var(--tw-ring-opacity));
+}
+
+.data-\[index\=\'3\'\]\:ring-mythomania[data-index='3']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(253 224 71 / var(--tw-ring-opacity));
+}
+
+.data-\[index\=\'4\'\]\:ring-dyslexia[data-index='4']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(37 99 235 / var(--tw-ring-opacity));
+}
+
+.data-\[index\=\'5\'\]\:ring-dyscalculia[data-index='5']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(126 34 206 / var(--tw-ring-opacity));
+}
+
+.data-\[index\=\'6\'\]\:ring-dysgraphia[data-index='6']{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(190 24 93 / var(--tw-ring-opacity));
 }
 
 .hover\:data-\[selected\=false\]\:text-neutral-500[data-selected=false]:hover{
   --tw-text-opacity: 1;
   color: rgb(115 115 115 / var(--tw-text-opacity));
 }
+
