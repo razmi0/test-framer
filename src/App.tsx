@@ -8,12 +8,12 @@ function App() {
       <Section className="grid place-content-center">
         <Tabs>
           <TabNav>
-            <TabTrigger selected value="urophylia">
-              Urophylia
-            </TabTrigger>
+            <TabTrigger value="urophylia">Urophylia</TabTrigger>
             <TabTrigger value="lupus">Lupus</TabTrigger>
             <TabTrigger value="erotomania">Erotomania</TabTrigger>
-            <TabTrigger value="mythomania">Mythomania</TabTrigger>
+            <TabTrigger selected value="mythomania">
+              Mythomania
+            </TabTrigger>
           </TabNav>
           <TabContent value="urophylia">
             <div className="h-16 w-16 bg-cyan-600"></div>

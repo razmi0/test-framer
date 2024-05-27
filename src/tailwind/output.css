@@ -711,6 +711,14 @@ video {
   transition-duration: 150ms;
 }
 
+.delay-100{
+  transition-delay: 100ms;
+}
+
+.delay-1000{
+  transition-delay: 1000ms;
+}
+
 .ease-in{
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
@@ -729,8 +737,20 @@ video {
   }
 }
 
+.delay-100{
+  animation-delay: 100ms;
+}
+
+.delay-1000{
+  animation-delay: 1000ms;
+}
+
 .ease-in{
   animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.\[transition-timing-function_\:_cubic-bezier\(\.69\2c \.28\2c \.75\2c 1\.22\)\]{
+  transition-timing-function_: cubic-bezier(.69,.28,.75,1.22);
 }
 
 :root {
@@ -1004,6 +1024,14 @@ th{
 
 .data-\[selected\=true\]\:bg-selected[data-selected=true]{
   background-color: hsla(0,0%,100%,.05);
+}
+
+.data-\[selected\=true\]\:bg-selected\/50[data-selected=true]{
+  background-color: hsla(0, 0%, 100%, 0.5);
+}
+
+.data-\[selected\=true\]\:bg-selected\/10[data-selected=true]{
+  background-color: hsla(0, 0%, 100%, 0.1);
 }
 
 .data-\[selected\=false\]\:text-neutral-500\/50[data-selected=false]{

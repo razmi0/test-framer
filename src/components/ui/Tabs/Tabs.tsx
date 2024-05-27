@@ -1,11 +1,10 @@
 import { cn } from "@/lib/utils";
 import type { FC, ReactNode } from "react";
-import { Children, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Children, useEffect, useMemo, useRef, useState } from "react";
 import type { RevealType } from "./utils";
 import Utils from "./utils";
 
 type TabType = "TabNav" | "TabContent" | "TabTrigger" | ("Tabs" & string);
-let hasDefaultSelected = false;
 const Tabs = ({ children }: { children: ReactNode }) => {
   const [reveals, setReveals] = useState<RevealType>({ reveals: [], index: 0, pastIndex: 0 });
   const tabsRef = useRef<HTMLDivElement>(null);
@@ -36,7 +35,6 @@ const Tabs = ({ children }: { children: ReactNode }) => {
             if (!value) return trigger;
 
             selected && (defaultSelected = i);
-            hasDefaultSelected = true;
             const toggle = () => {
               toggleReveal(i);
             };
@@ -99,6 +97,7 @@ type TabTriggerProps = {
 
 const TabTrigger = ({ children, value, onClick }: TabTriggerProps) => {
   const { getSelected } = Utils.useTabsContext();
+  const [mounting, setMounting] = useState(true);
   const selected = getSelected(value);
   const ref = useRef<HTMLButtonElement>(null);
 
@@ -115,12 +114,7 @@ const TabTrigger = ({ children, value, onClick }: TabTriggerProps) => {
     onClick && onClick();
   };
 
-  useLayoutEffect(() => {
-    if (selected) {
-      setPositions();
-      console.log(value);
-    }
-  }, []);
+  useEffect(() => setMounting(false), []);
 
   return (
     <button
@@ -132,7 +126,7 @@ const TabTrigger = ({ children, value, onClick }: TabTriggerProps) => {
       className={cn(
         "relative text-sm font-normal px-5 py-1 text-white transition-all ring-offset-transparent rounded-lg",
         "hover:bg-neutral-900",
-        "data-[selected=false]:text-neutral-500/50 hover:data-[selected=false]:text-neutral-500",
+        "data-[selected=false]:text-neutral-500/50 hover:data-[selected=false]:text-neutral-500 data-[selected=true]:bg-selected",
         "active:ring-2 active:ring-offset-2 active:ring-neutral-800"
       )}>
       {children}
@@ -165,41 +159,38 @@ const TabNav = ({ children }: { children: ReactNode }) => {
   const navRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const paddings = "px-[8px] py-1";
-  const [positions, setPositions] = useState(Utils.positions);
-
-  useEffect(() => {
-    console.log("positions", positions);
-    setPositions(Utils.positions);
-  }, [Utils.positions]);
 
   return (
     <>
-      <style>
-        {`
+      {Utils.positions.current.width !== 0 && (
+        <style>
+          {`
         .slide {
-          animation: slide 0.3s cubic-bezier(.69,.28,.75,1.22) forwards;
-          left: ${positions.current.left}px;
-          width: ${positions.current.width}px;
-
+          animation: slide 0.150s cubic-bezier(.69,.28,.75,1.22) forwards;
         }
         
         @keyframes slide {
           0% {
-            left: ${positions.past.left}px;
-            width: ${positions.past.width}px;
+            left: ${Utils.positions.past.left}px;
+            width: ${Utils.positions.past.width}px;
           }
           100% {
-            left: ${positions.current.left}px;
-            width: ${positions.current.width}px;
+            left: ${Utils.positions.current.left}px;
+            width: ${Utils.positions.current.width}px;
           }
         }
       `}
-      </style>
+        </style>
+      )}
+
       <div className={cn(`relative flex gap-3 items-center justify-center rounded-md`, paddings)} ref={navRef}>
         {children}
-        <div
-          ref={sliderRef}
-          className={cn(`absolute bg-selected h-7 rounded-md pointer-events-none slide`, paddings)}></div>
+
+        {Utils.positions.current.width !== 0 && (
+          <div
+            ref={sliderRef}
+            className={cn(`absolute h-7 bg-selected rounded-md pointer-events-none slide`, paddings)}></div>
+        )}
       </div>
     </>
   );
