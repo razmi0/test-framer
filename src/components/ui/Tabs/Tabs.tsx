@@ -5,7 +5,7 @@ import type { RevealType } from "./utils";
 import Utils from "./utils";
 
 type TabType = "TabNav" | "TabContent" | "TabTrigger" | ("Tabs" & string);
-const Tabs = ({ children }: { children: ReactNode }) => {
+const Tabs = ({ children, className }: { children: ReactNode; className?: string }) => {
   const [reveals, setReveals] = useState<RevealType>({ reveals: [], index: 0, pastIndex: 0 });
   const tabsRef = useRef<HTMLDivElement>(null);
 
@@ -81,7 +81,7 @@ const Tabs = ({ children }: { children: ReactNode }) => {
 
   return (
     <RevealProvider>
-      <div ref={tabsRef} className="flex flex-col-reverse items-center justify-center">
+      <div ref={tabsRef} className={cn("flex items-center justify-center", className)}>
         {Utils.clonedChildren}
       </div>
     </RevealProvider>

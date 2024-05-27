@@ -596,12 +596,34 @@ video {
   height: 1.75rem;
 }
 
+.h-fit{
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
+.h-full{
+  height: 100%;
+}
+
 .w-16{
   width: 4rem;
 }
 
 .w-screen{
   width: 100vw;
+}
+
+.w-fit{
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.w-full{
+  width: 100%;
+}
+
+.flex-col{
+  flex-direction: column;
 }
 
 .flex-col-reverse{
@@ -659,6 +681,15 @@ video {
   padding-bottom: 0.25rem;
 }
 
+.py-3{
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.text-center{
+  text-align: center;
+}
+
 .text-sm{
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -668,15 +699,83 @@ video {
   font-weight: 400;
 }
 
+.font-bold{
+  font-weight: 700;
+}
+
 .text-white{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.text-fore{
+  --tw-text-opacity: 1;
+  color: rgb(22 23 22 / var(--tw-text-opacity));
+}
+
+.text-neutral-200{
+  --tw-text-opacity: 1;
+  color: rgb(229 229 229 / var(--tw-text-opacity));
+}
+
+.text-neutral-500{
+  --tw-text-opacity: 1;
+  color: rgb(115 115 115 / var(--tw-text-opacity));
+}
+
+.text-neutral-100{
+  --tw-text-opacity: 1;
+  color: rgb(245 245 245 / var(--tw-text-opacity));
+}
+
+.mix-blend-multiply{
+  mix-blend-mode: multiply;
+}
+
+.mix-blend-screen{
+  mix-blend-mode: screen;
+}
+
+.mix-blend-overlay{
+  mix-blend-mode: overlay;
+}
+
+.mix-blend-color-dodge{
+  mix-blend-mode: color-dodge;
+}
+
+.mix-blend-color-burn{
+  mix-blend-mode: color-burn;
+}
+
+.mix-blend-hard-light{
+  mix-blend-mode: hard-light;
+}
+
+.mix-blend-difference{
+  mix-blend-mode: difference;
+}
+
+.mix-blend-exclusion{
+  mix-blend-mode: exclusion;
+}
+
+.mix-blend-hue{
+  mix-blend-mode: hue;
+}
+
+.mix-blend-color{
+  mix-blend-mode: color;
 }
 
 .ring-1{
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+.ring-inset{
+  --tw-ring-inset: inset;
 }
 
 .ring-dyscalculia{
@@ -712,6 +811,10 @@ video {
 .ring-urophylia{
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(14 116 144 / var(--tw-ring-opacity));
+}
+
+.ring-neutral-100\/20{
+  --tw-ring-color: rgb(245 245 245 / 0.2);
 }
 
 .ring-offset-1{
