@@ -187,13 +187,17 @@ const TabSlider = ({ className, ...props }: TabSliderProps) => {
         }
         
         @keyframes slide {
-          from {
+          0% {
             left: ${Utils.positions.past.left}px;
             top : ${Utils.positions.past.top}px;
             width: ${Utils.positions.past.width}px;
             height: ${Utils.positions.past.height}px;
+            filter : brightness(1.5);
           }
-          to {
+          25% {
+            filter : brightness(1);
+          }
+          100% {
             left: ${Utils.positions.current.left}px;
             top : ${Utils.positions.current.top}px;
             width: ${Utils.positions.current.width}px;

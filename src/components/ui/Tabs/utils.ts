@@ -62,7 +62,7 @@ const positions: PositionsType = {
 
 const animateVars = {
   timingFunction: "cubic-bezier(.69,.28,.75,1.22)",
-  duration: "0.3s",
+  duration: "0.150s",
 };
 
 const TabsContext = createContext<TabContextType>({
