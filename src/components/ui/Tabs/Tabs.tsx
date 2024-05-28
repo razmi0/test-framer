@@ -1,13 +1,14 @@
 import { cn } from "@/lib/utils";
-import type { FC, HTMLAttributes, ReactNode } from "react";
+import { cubicBezier, motion, circIn, type MotionProps } from "framer-motion";
+import type { HTMLAttributes, ReactNode } from "react";
 import { Children, useEffect, useRef, useState } from "react";
 import type { RevealType } from "./utils";
 import Utils from "./utils";
 
-type TabType = "TabNav" | "TabContent" | "TabTrigger" | ("Tabs" & string);
-const Tabs = ({ children, className }: { children: ReactNode; className?: string }) => {
+type TabType = ("TabNav" | "TabContent" | "TabTrigger" | "TabSlider" | "Tabs") & string;
+const Tabs = ({ children, defaultSelected = "" }: { children: ReactNode; defaultSelected?: string }) => {
   const [reveals, setReveals] = useState<RevealType>({ reveals: [], index: 0, pastIndex: 0 });
-  const tabsRef = useRef<HTMLDivElement>(null);
+  // const tabsRef = useRef<HTMLDivElement>(null);
 
   const toggleReveal = (i: number) => {
     setReveals((prev) => {
@@ -17,44 +18,48 @@ const Tabs = ({ children, className }: { children: ReactNode; className?: string
     });
   };
 
-  let defaultSelected = 0;
-
   useEffect(() => {
-    setReveals({
-      reveals: Utils.buildReveals({ size: Utils.lookupValues.size, trueAt: defaultSelected }),
-      index: defaultSelected,
-      pastIndex: defaultSelected,
-    });
+    const defaultSelectedIndex = Utils.lookupValues.has(defaultSelected) ? Utils.lookupValues.get(defaultSelected) : 0;
+    toggleReveal(defaultSelectedIndex || 0);
   }, []);
 
   const AugmentedChildren = () => {
     return Children.map(children, (child) => {
       if (!Utils.validAndHasProps(child)) return child;
       const childType = Utils.getComponentDisplayName(child) as TabType;
+      /** */
       switch (childType) {
         case "TabNav": {
-          const tabChildrens = child.props.children as FC<TabTriggerProps>;
-          const navChildren = Children.map(tabChildrens, (trigger, i) => {
+          const navChildren = Children.map(child.props.children, (trigger, i) => {
+            const name = trigger.type.name;
             if (!Utils.validAndHasProps(trigger)) return trigger;
-            const { children, value, selected } = trigger.props;
-            if (!value) return trigger;
 
-            selected && setReveals((prev) => ({ ...prev, index: i }));
-            const userOnclick = trigger.props.onClick;
-            Utils.lookupValues.set(value, i);
-            const getSelected = (value: string) => reveals.reveals[Utils.lookupValues.get(value) || 0];
+            switch (name) {
+              case "TabTrigger": {
+                const { children, value, selected } = trigger.props;
+                if (!value) return trigger;
 
-            return (
-              <TabTrigger
-                {...trigger.props}
-                getSelected={getSelected}
-                onClick={() => {
-                  toggleReveal(i);
-                  userOnclick && userOnclick();
-                }}>
-                {children}
-              </TabTrigger>
-            );
+                selected && setReveals((prev) => ({ ...prev, index: i }));
+                const userOnclick = trigger.props.onClick;
+                Utils.lookupValues.set(value, i);
+                const getSelected = (value: string) => reveals.reveals[Utils.lookupValues.get(value) || 0];
+
+                return (
+                  <TabTrigger
+                    {...trigger.props}
+                    getSelected={getSelected}
+                    onClick={() => {
+                      toggleReveal(i);
+                      userOnclick && userOnclick();
+                    }}>
+                    {children}
+                  </TabTrigger>
+                );
+              }
+              case "TabSlider": {
+                return <TabSlider {...trigger.props} reveals={reveals} />;
+              }
+            }
           });
 
           return <TabNav {...child.props}>{navChildren}</TabNav>;
@@ -75,11 +80,8 @@ const Tabs = ({ children, className }: { children: ReactNode; className?: string
     });
   };
 
-  return (
-    <div ref={tabsRef} className={cn("flex items-center justify-center", className)}>
-      {AugmentedChildren()}
-    </div>
-  );
+  // div ref={tabsRef} className={cn("flex items-center justify-center", className)}
+  return <>{AugmentedChildren()}</>;
 };
 
 Tabs.displayName = "Tabs";
@@ -99,7 +101,7 @@ const TabTrigger = ({ children, value, onClick, className, getSelected, ...props
 
   const handleOnCLick = () => {
     Utils.positions.update(ref);
-    Utils.clickedFirst = true;
+    // Utils.clickedFirst = true;
     onClick && onClick();
   };
 
@@ -113,7 +115,7 @@ const TabTrigger = ({ children, value, onClick, className, getSelected, ...props
       className={cn(
         "relative text-sm font-normal px-5 py-1 text-white transition-all ring-offset-transparent rounded-lg flex items-center justify-center",
         "data-[selected=false]:text-neutral-500/50 hover:data-[selected=false]:text-neutral-200/80",
-        !Utils.clickedFirst && selected && "bg-selected",
+
         "active:ring-2 active:ring-offset-2 active:ring-neutral-800",
         className
       )}
@@ -137,7 +139,7 @@ const TabContent = ({ children, value, className, getSelected, ...props }: TabCo
   return (
     <>
       {selected && (
-        <div {...props} data-selected={selected} data-value={value} className={cn("mt-8", className)}>
+        <div {...props} data-selected={selected} data-value={value} className={cn("", className)}>
           {children}
         </div>
       )}
@@ -166,41 +168,34 @@ const TabNav = ({ children, className, ...props }: TabNavProps) => {
 
 TabNav.displayName = "TabNav";
 
-interface TabSliderProps extends HTMLAttributes<HTMLDivElement> {
+interface TabSliderProps extends MotionProps {
   className?: string;
+  reveals?: RevealType;
 }
-const TabSlider = ({ className, ...props }: TabSliderProps) => {
-  const { reveals } = Utils.useTabsContext();
+const TabSlider = ({ className, reveals, ...props }: TabSliderProps) => {
   if (Utils.positions.current.width === 0) return <></>;
+
   return (
-    <>
-      <style>
-        {`
-        .slide {
-          animation: slide ${Utils.animateVars.duration} ${Utils.animateVars.timingFunction} forwards;
-        }
-        
-        @keyframes slide {
-          0% {
-            left: ${Utils.positions.past.left}px;
-            top : ${Utils.positions.past.top}px;
-            width: ${Utils.positions.past.width}px;
-            height: ${Utils.positions.past.height}px;
-          }
-          100% {
-            left: ${Utils.positions.current.left}px;
-            top : ${Utils.positions.current.top}px;
-            width: ${Utils.positions.current.width}px;
-            height: ${Utils.positions.current.height}px;
-          }
-        }
-      `}
-      </style>
-      <div
-        data-index={reveals.index}
-        className={cn("absolute h-7 bg-selected rounded-md pointer-events-none slide", className)}
-        {...props}></div>
-    </>
+    <motion.div
+      initial={{
+        left: Utils.positions.past.left,
+        top: Utils.positions.past.top,
+        width: Utils.positions.past.width,
+        height: Utils.positions.past.height,
+      }}
+      animate={{
+        left: Utils.positions.current.left,
+        top: Utils.positions.current.top,
+        width: Utils.positions.current.width,
+        height: Utils.positions.current.height,
+      }}
+      transition={{
+        duration: 0.1,
+        ease: circIn,
+      }}
+      data-index={reveals?.index}
+      className={cn("absolute h-7 bg-selected rounded-md pointer-events-none", className)}
+      {...props}></motion.div>
   );
 };
 
