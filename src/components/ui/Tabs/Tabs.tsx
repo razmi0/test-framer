@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import type { FC, HTMLAttributes, ReactNode } from "react";
-import { Children, useEffect, useMemo, useRef, useState } from "react";
+import { Children, useEffect, useRef, useState } from "react";
 import type { RevealType } from "./utils";
 import Utils from "./utils";
 
@@ -17,11 +17,18 @@ const Tabs = ({ children, className }: { children: ReactNode; className?: string
     });
   };
 
+  let defaultSelected = 0;
+
   useEffect(() => {
-    // -- augmenting children
-    // --
-    let defaultSelected = 0;
-    Utils.clonedChildren = Children.map(children, (child) => {
+    setReveals({
+      reveals: Utils.buildReveals({ size: Utils.lookupValues.size, trueAt: defaultSelected }),
+      index: defaultSelected,
+      pastIndex: defaultSelected,
+    });
+  }, []);
+
+  const AugmentedChildren = () => {
+    return Children.map(children, (child) => {
       if (!Utils.validAndHasProps(child)) return child;
       const childType = Utils.getComponentDisplayName(child) as TabType;
       switch (childType) {
@@ -29,21 +36,20 @@ const Tabs = ({ children, className }: { children: ReactNode; className?: string
           const tabChildrens = child.props.children as FC<TabTriggerProps>;
           const navChildren = Children.map(tabChildrens, (trigger, i) => {
             if (!Utils.validAndHasProps(trigger)) return trigger;
-
             const { children, value, selected } = trigger.props;
-
             if (!value) return trigger;
 
-            selected && (defaultSelected = i);
-            const toggle = () => toggleReveal(i);
+            selected && setReveals((prev) => ({ ...prev, index: i }));
             const userOnclick = trigger.props.onClick;
             Utils.lookupValues.set(value, i);
+            const getSelected = (value: string) => reveals.reveals[Utils.lookupValues.get(value) || 0];
 
             return (
               <TabTrigger
                 {...trigger.props}
+                getSelected={getSelected}
                 onClick={() => {
-                  toggle();
+                  toggleReveal(i);
                   userOnclick && userOnclick();
                 }}>
                 {children}
@@ -54,37 +60,25 @@ const Tabs = ({ children, className }: { children: ReactNode; className?: string
           return <TabNav {...child.props}>{navChildren}</TabNav>;
         }
 
+        case "TabContent": {
+          const getSelected = (value: string) => reveals.reveals[Utils.lookupValues.get(value) || 0];
+          return (
+            <TabContent {...child.props} getSelected={getSelected}>
+              {child.props.children}
+            </TabContent>
+          );
+        }
+
         default:
           return child;
       }
     });
-    // -- initialize reveals
-    // --
-    setReveals({
-      reveals: Utils.buildReveals({ size: Utils.lookupValues.size, trueAt: defaultSelected }),
-      index: defaultSelected,
-      pastIndex: defaultSelected,
-    });
-
-    return () => {
-      Utils.lookupValues.clear();
-      Utils.clonedChildren = null;
-    };
-  }, []);
-
-  const RevealProvider = useMemo(() => {
-    return ({ children }: { children: ReactNode }) => {
-      const getSelected = (value: string) => reveals.reveals[Utils.lookupValues.get(value) || 0];
-      return <Utils.TabsContext.Provider value={{ getSelected, reveals }}>{children}</Utils.TabsContext.Provider>;
-    };
-  }, [reveals, Utils.lookupValues]);
+  };
 
   return (
-    <RevealProvider>
-      <div ref={tabsRef} className={cn("flex items-center justify-center", className)}>
-        {Utils.clonedChildren}
-      </div>
-    </RevealProvider>
+    <div ref={tabsRef} className={cn("flex items-center justify-center", className)}>
+      {AugmentedChildren()}
+    </div>
   );
 };
 
@@ -96,11 +90,11 @@ interface TabTriggerProps extends HTMLAttributes<HTMLButtonElement> {
   onClick?: () => void;
   selected?: boolean;
   className?: string;
+  getSelected?: (value: string) => boolean;
 }
 
-const TabTrigger = ({ children, value, onClick, className, ...props }: TabTriggerProps) => {
-  const { getSelected } = Utils.useTabsContext();
-  const selected = getSelected(value);
+const TabTrigger = ({ children, value, onClick, className, getSelected, ...props }: TabTriggerProps) => {
+  const selected = getSelected?.(value) || false;
   const ref = useRef<HTMLButtonElement>(null);
 
   const handleOnCLick = () => {
@@ -118,7 +112,7 @@ const TabTrigger = ({ children, value, onClick, className, ...props }: TabTrigge
       data-value={value}
       className={cn(
         "relative text-sm font-normal px-5 py-1 text-white transition-all ring-offset-transparent rounded-lg flex items-center justify-center",
-        "data-[selected=false]:text-neutral-500/50 hover:data-[selected=false]:text-neutral-200/80 hover:data-[selected=true]:bg-neutral-900",
+        "data-[selected=false]:text-neutral-500/50 hover:data-[selected=false]:text-neutral-200/80",
         !Utils.clickedFirst && selected && "bg-selected",
         "active:ring-2 active:ring-offset-2 active:ring-neutral-800",
         className
@@ -135,10 +129,11 @@ interface TabContentProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   value: string;
   className?: string;
+  getSelected?: (value: string) => boolean;
 }
 
-const TabContent = ({ children, value, className, ...props }: TabContentProps) => {
-  const selected = Utils.useTabsContext().getSelected(value);
+const TabContent = ({ children, value, className, getSelected, ...props }: TabContentProps) => {
+  const selected = getSelected?.(value) || false;
   return (
     <>
       {selected && (

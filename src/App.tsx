@@ -7,20 +7,13 @@ import { cn } from "./lib/utils";
 
 const values = ["urophylia", "lupus", "erotomania", "dyslexia"];
 const format = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
-
+type ActiveType = { value: string; showColor: boolean };
 const App = () => {
-  const [active, setActive] = useState(values[0]);
-  const [showColor, setShowColor] = useState(false);
+  const [active, setActive] = useState<ActiveType>({ value: values[0], showColor: false });
 
-  const toggleShow = () => {
-    console.log("toggleShow", showColor);
-    setShowColor((p) => !p);
-  };
+  const toggleShow = () => setActive((p) => ({ ...p, showColor: !p.showColor }));
+  const assignValue = (value: string) => setActive((p) => ({ ...p, value }));
 
-  const assignValue = (value: string) => {
-    console.log("assignValue", active, value);
-    setActive(value);
-  };
   return (
     <Section className="relative grid place-content-center">
       <Tabs>
@@ -34,12 +27,12 @@ const App = () => {
         </TabNav>
         {values.map((value, i) => (
           <TabContent key={i} value={value} className="z-10">
-            <Panel active={active} show={showColor} />
+            <Panel active={active} />
           </TabContent>
         ))}
       </Tabs>
       <Background type="mosaic" />
-      <ModeToggle active={active} show={showColor} onClick={toggleShow} />
+      <ModeToggle active={active} onClick={toggleShow} />
     </Section>
   );
 };
@@ -50,19 +43,16 @@ const Slider = () => {
   );
 };
 
-const Panel = ({ active, show }: { active: string; show: boolean }) => {
-  console.log("Panel", active);
-  const color = show ? `ring-${active} ring-1` : "hh";
-
-  console.log(color);
-
+type PanelProps = { active: ActiveType };
+const Panel = ({ active }: PanelProps) => {
+  const { value, showColor } = active;
   return (
     <div
       className={cn(
         `flex items-center justify-center h-[50vh] w-[50vw] py-3 px-5 border border-neutral-100/20 bg-stone-900 rounded-md z-10 shadow-sm shadow-black/80`,
-        show ? `ring-${active} ring-1` : ""
+        showColor ? `ring-${value} ring-1` : ""
       )}>
-      <p className="text-center text-neutral-100 font-bold">{format(active)}</p>
+      <p className="text-center text-neutral-100 font-bold">{format(value)}</p>
     </div>
   );
 };
@@ -70,15 +60,15 @@ const Panel = ({ active, show }: { active: string; show: boolean }) => {
 interface ModeToggleProps extends HTMLAttributes<HTMLButtonElement> {
   className?: string;
   children?: ReactNode;
-  active: string;
-  show: boolean;
+  active: ActiveType;
 }
-const ModeToggle = ({ className, children, active, show, ...props }: ModeToggleProps) => {
+const ModeToggle = ({ className, children, active, ...props }: ModeToggleProps) => {
+  const { showColor, value } = active;
   const toggle = (e: MouseEvent<HTMLButtonElement>) => {
     if ("onClick" in props) props.onClick?.(e);
   };
   return (
-    <button {...props} type="button" className={cn(show ? `text-${active}` : "", className)} onClick={toggle}>
+    <button {...props} onClick={toggle} type="button" className={cn(showColor ? `text-${value}` : "", className)}>
       <Power className="" />
       {children}
     </button>

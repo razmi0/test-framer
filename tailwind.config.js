@@ -40,5 +40,38 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({ addBase, theme }) {
+      function extractColorVars(colorObj, colorGroup = "") {
+        const extractKeys = [
+          "fore",
+          "selected",
+          "urophylia",
+          "lupus",
+          "erotomania",
+          "mythomania",
+          "dyslexia",
+          "dyscalculia",
+          "dysgraphia",
+        ];
+        return Object.keys(colorObj).reduce((vars, colorKey) => {
+          if (!extractKeys.includes(colorKey)) return vars;
+
+          const value = colorObj[colorKey];
+
+          const newVars =
+            typeof value === "string"
+              ? { [`--color${colorGroup}-${colorKey}`]: value }
+              : extractColorVars(value, `-${colorKey}`);
+
+          return { ...vars, ...newVars };
+        }, {});
+      }
+
+      addBase({
+        ":root": extractColorVars(theme("colors")),
+      });
+    },
+  ],
 };
