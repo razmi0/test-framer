@@ -36,7 +36,8 @@ a:hover {
 }
 
 body {
-  background: radial-gradient(circle at center, var(--body-radial-color-1) 0%, var(--body-radial-color-2) 100%);
+  background-color: transparent;
+  /* background: radial-gradient(circle at center, var(--body-radial-color-1) 0%, var(--body-radial-color-2) 100%); */
   min-height : 100vh;
 }
 
@@ -254,6 +255,10 @@ dysgraphia: "#be185d", */
   --tw-ring-color: #0e7490;
 }
 
+.text-urophylia {
+  color: #0e7490;
+}
+
 .bg-lupus {
   background-color: #b91c1c;
   
@@ -261,6 +266,10 @@ dysgraphia: "#be185d", */
 
 .ring-lupus {
   --tw-ring-color: #b91c1c;
+}
+
+.text-lupus {
+  color: #b91c1c;
 }
 
 .bg-erotomania {
@@ -272,6 +281,10 @@ dysgraphia: "#be185d", */
   --tw-ring-color: #166534;
 }
 
+.text-erotomania {
+  color: #166534;
+}
+
 .bg-mythomania {
   background-color: #fde047;
   
@@ -279,6 +292,10 @@ dysgraphia: "#be185d", */
 
 .ring-mythomania {
   --tw-ring-color: #fde047;
+}
+
+.text-mythomania {
+  color: #fde047;
 }
 
 .bg-dyslexia {
@@ -290,6 +307,10 @@ dysgraphia: "#be185d", */
   --tw-ring-color: #2563eb;
 }
 
+.text-dyslexia {
+  color: #2563eb;
+}
+
 .bg-dyscalculia {
   background-color: #7e22ce;
   
@@ -299,6 +320,10 @@ dysgraphia: "#be185d", */
   --tw-ring-color: #7e22ce;
 }
 
+.text-dyscalculia {
+  color: #7e22ce;
+}
+
 .bg-dysgraphia {
   background-color: #be185d;
   
@@ -306,5 +331,9 @@ dysgraphia: "#be185d", */
 
 .ring-dysgraphia {
   --tw-ring-color: #be185d;
+}
+
+.text-dysgraphia {
+  color: #be185d;
 }
 

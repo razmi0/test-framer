@@ -1,4 +1,7 @@
+import { Power } from "lucide-react";
+import { HTMLAttributes, MouseEvent, ReactNode, useState } from "react";
 import Section from "./components/Section";
+import Background from "./components/ui/Background";
 import Tabs, { TabContent, TabNav, TabSlider, TabTrigger } from "./components/ui/Tabs/Tabs";
 import { cn } from "./lib/utils";
 
@@ -6,30 +9,37 @@ const values = ["urophylia", "lupus", "erotomania", "dyslexia"];
 const format = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
 const App = () => {
+  const [active, setActive] = useState(values[0]);
+  const [showColor, setShowColor] = useState(false);
+
+  const toggleShow = () => {
+    console.log("toggleShow", showColor);
+    setShowColor((p) => !p);
+  };
+
+  const assignValue = (value: string) => {
+    console.log("assignValue", active, value);
+    setActive(value);
+  };
   return (
     <Section className="relative grid place-content-center">
       <Tabs>
         <TabNav className="flex-col">
           {values.map((value, i) => (
-            <TabTrigger key={i} value={value}>
+            <TabTrigger key={i} value={value} onClick={() => assignValue(value)}>
               {format(value)}
             </TabTrigger>
           ))}
           <Slider />
         </TabNav>
         {values.map((value, i) => (
-          <TabContent key={i} value={value}>
-            <Panel value={value} />
+          <TabContent key={i} value={value} className="z-10">
+            <Panel active={active} show={showColor} />
           </TabContent>
         ))}
       </Tabs>
-      <svg className="pointer-events-none fixed inset-0 bottom-0 left-0 right-0 top-0 -z-50 min-h-full min-w-full overflow-x-hidden overflow-y-hidden bg-white/10 opacity-5">
-        <filter id="noise">
-          <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="4" stitchTiles="stitch"></feTurbulence>
-          <feColorMatrix type="saturate" values="0"></feColorMatrix>
-        </filter>
-        <rect width="100%" height="100%" filter="url(#noise)"></rect>
-      </svg>
+      <Background type="mosaic" />
+      <ModeToggle active={active} show={showColor} onClick={toggleShow} />
     </Section>
   );
 };
@@ -40,12 +50,38 @@ const Slider = () => {
   );
 };
 
-const Panel = ({ value }: { value: string }) => {
+const Panel = ({ active, show }: { active: string; show: boolean }) => {
+  console.log("Panel", active);
+  const color = show ? `ring-${active} ring-1` : "hh";
+
+  console.log(color);
+
   return (
     <div
-      className={`flex items-center justify-center h-[50vh] w-[50vw] py-3 px-5 ring-1 border border-neutral-100/20 ring-${value} bg-fore rounded-md`}>
-      <p className="text-center text-neutral-100 font-bold">{format(value)}</p>
+      className={cn(
+        `flex items-center justify-center h-[50vh] w-[50vw] py-3 px-5 border border-neutral-100/20 bg-stone-900 rounded-md z-10 shadow-sm shadow-black/80`,
+        show ? `ring-${active} ring-1` : ""
+      )}>
+      <p className="text-center text-neutral-100 font-bold">{format(active)}</p>
     </div>
+  );
+};
+
+interface ModeToggleProps extends HTMLAttributes<HTMLButtonElement> {
+  className?: string;
+  children?: ReactNode;
+  active: string;
+  show: boolean;
+}
+const ModeToggle = ({ className, children, active, show, ...props }: ModeToggleProps) => {
+  const toggle = (e: MouseEvent<HTMLButtonElement>) => {
+    if ("onClick" in props) props.onClick?.(e);
+  };
+  return (
+    <button {...props} type="button" className={cn(show ? `text-${active}` : "", className)} onClick={toggle}>
+      <Power className="" />
+      {children}
+    </button>
   );
 };
 export default App;

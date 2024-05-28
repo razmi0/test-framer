@@ -118,8 +118,7 @@ const TabTrigger = ({ children, value, onClick, className, ...props }: TabTrigge
       data-value={value}
       className={cn(
         "relative text-sm font-normal px-5 py-1 text-white transition-all ring-offset-transparent rounded-lg flex items-center justify-center",
-        "hover:bg-neutral-900",
-        "data-[selected=false]:text-neutral-500/50 hover:data-[selected=false]:text-neutral-500",
+        "data-[selected=false]:text-neutral-500/50 hover:data-[selected=false]:text-neutral-200/80 hover:data-[selected=true]:bg-neutral-900",
         !Utils.clickedFirst && selected && "bg-selected",
         "active:ring-2 active:ring-offset-2 active:ring-neutral-800",
         className
@@ -192,10 +191,6 @@ const TabSlider = ({ className, ...props }: TabSliderProps) => {
             top : ${Utils.positions.past.top}px;
             width: ${Utils.positions.past.width}px;
             height: ${Utils.positions.past.height}px;
-            filter : brightness(1.5);
-          }
-          25% {
-            filter : brightness(1);
           }
           100% {
             left: ${Utils.positions.current.left}px;
