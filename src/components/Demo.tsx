@@ -60,9 +60,9 @@ const ModeToggle = ({ className, children, active, ...props }: ModeToggleProps) 
 
 const DemoButton = () => {
   return (
-    <Buttons.Group>
+    <Buttons.Group className="flex ">
       <Buttons.Button>Button 1</Buttons.Button>
-      <Buttons.Button>Button 2</Buttons.Button>
+      <Buttons.Button defaultSelected>Button 2</Buttons.Button>
       <Buttons.Button>Button 3</Buttons.Button>
       <Buttons.Button>Button 4</Buttons.Button>
       <Slider className={sliderStyle} />
