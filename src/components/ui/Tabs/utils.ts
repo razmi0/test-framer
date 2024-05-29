@@ -46,6 +46,9 @@ type PositionsType = {
 const positions: PositionsType = {
   past: { left: 0, top: 0, width: 0, height: 0 },
   current: { left: 0, top: 0, width: 0, height: 0 },
+  /**
+   * @description Update the current and past positions of the element
+   */
   update: function (elementRef: RefObject<HTMLButtonElement> | null) {
     const element = elementRef?.current;
     if (!element) return;

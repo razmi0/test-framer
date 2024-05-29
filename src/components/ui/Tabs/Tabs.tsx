@@ -1,14 +1,48 @@
 import { cn } from "@/lib/utils";
-import { cubicBezier, motion, circIn, type MotionProps } from "framer-motion";
+import { cubicBezier, motion, type MotionProps } from "framer-motion";
 import type { HTMLAttributes, ReactNode } from "react";
-import { Children, useEffect, useRef, useState } from "react";
+import { Children, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { RevealType } from "./utils";
 import Utils from "./utils";
+
+type PositionType = {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+};
+type PositionsType = {
+  past: PositionType;
+  current: PositionType;
+};
+
+const defaultInitial = {
+  past: { left: 0, top: 0, width: 0, height: 0 },
+  current: { left: 0, top: 0, width: 0, height: 0 },
+};
+
+const usePositions = (initial: PositionsType = defaultInitial) => {
+  const [positions, setPositions] = useState<PositionsType>(initial);
+
+  const update = (elementRef: React.RefObject<HTMLButtonElement> | null) => {
+    const element = elementRef?.current;
+    if (!element) return;
+    const newValues = {
+      left: element.offsetLeft,
+      width: element.offsetWidth,
+      height: element.offsetHeight,
+      top: element.offsetTop,
+    };
+    setPositions((prev) => ({ past: prev.current, current: newValues }));
+  };
+
+  return { position: positions, update };
+};
 
 type TabType = ("TabNav" | "TabContent" | "TabTrigger" | "TabSlider" | "Tabs") & string;
 const Tabs = ({ children, defaultSelected = "" }: { children: ReactNode; defaultSelected?: string }) => {
   const [reveals, setReveals] = useState<RevealType>({ reveals: [], index: 0, pastIndex: 0 });
-  // const tabsRef = useRef<HTMLDivElement>(null);
+  const { position, update } = usePositions();
 
   const toggleReveal = (i: number) => {
     setReveals((prev) => {
@@ -18,12 +52,13 @@ const Tabs = ({ children, defaultSelected = "" }: { children: ReactNode; default
     });
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const defaultSelectedIndex = Utils.lookupValues.has(defaultSelected) ? Utils.lookupValues.get(defaultSelected) : 0;
-    toggleReveal(defaultSelectedIndex || 0);
+    const initialReveals = Utils.buildReveals({ size: Utils.lookupValues.size, trueAt: defaultSelectedIndex });
+    setReveals((prev) => ({ ...prev, reveals: initialReveals }));
   }, []);
 
-  const AugmentedChildren = () => {
+  const AugmentedChildren = useMemo(() => {
     return Children.map(children, (child) => {
       if (!Utils.validAndHasProps(child)) return child;
       const childType = Utils.getComponentDisplayName(child) as TabType;
@@ -48,6 +83,7 @@ const Tabs = ({ children, defaultSelected = "" }: { children: ReactNode; default
                   <TabTrigger
                     {...trigger.props}
                     getSelected={getSelected}
+                    updatePos={update}
                     onClick={() => {
                       toggleReveal(i);
                       userOnclick && userOnclick();
@@ -57,7 +93,7 @@ const Tabs = ({ children, defaultSelected = "" }: { children: ReactNode; default
                 );
               }
               case "TabSlider": {
-                return <TabSlider {...trigger.props} reveals={reveals} />;
+                return <TabSlider {...trigger.props} positions={position} reveals={reveals} />;
               }
             }
           });
@@ -78,10 +114,9 @@ const Tabs = ({ children, defaultSelected = "" }: { children: ReactNode; default
           return child;
       }
     });
-  };
+  }, [reveals, children]);
 
-  // div ref={tabsRef} className={cn("flex items-center justify-center", className)}
-  return <>{AugmentedChildren()}</>;
+  return <>{AugmentedChildren}</>;
 };
 
 Tabs.displayName = "Tabs";
@@ -93,15 +128,19 @@ interface TabTriggerProps extends HTMLAttributes<HTMLButtonElement> {
   selected?: boolean;
   className?: string;
   getSelected?: (value: string) => boolean;
+  updatePos?: (elementRef: React.RefObject<HTMLButtonElement> | null) => void;
 }
 
-const TabTrigger = ({ children, value, onClick, className, getSelected, ...props }: TabTriggerProps) => {
+const TabTrigger = ({ children, value, onClick, className, getSelected, updatePos, ...props }: TabTriggerProps) => {
   const selected = getSelected?.(value) || false;
   const ref = useRef<HTMLButtonElement>(null);
 
+  useEffect(() => {
+    if (selected) updatePos?.(ref);
+  }, [selected]);
+
   const handleOnCLick = () => {
-    Utils.positions.update(ref);
-    // Utils.clickedFirst = true;
+    updatePos?.(ref);
     onClick && onClick();
   };
 
@@ -171,28 +210,33 @@ TabNav.displayName = "TabNav";
 interface TabSliderProps extends MotionProps {
   className?: string;
   reveals?: RevealType;
+  positions?: PositionsType;
 }
-const TabSlider = ({ className, reveals, ...props }: TabSliderProps) => {
-  if (Utils.positions.current.width === 0) return <></>;
+const TabSlider = ({ className, reveals, positions, ...props }: TabSliderProps) => {
+  const initial = {
+    left: positions?.past.left || 0,
+    top: positions?.past.top || 0,
+    width: positions?.past.width || 0,
+    height: positions?.past.height || 0,
+  };
+
+  const animate = {
+    left: positions?.current.left || 0,
+    top: positions?.current.top || 0,
+    width: positions?.current.width || 0,
+    height: positions?.current.height || 0,
+  };
+
+  const transition = {
+    duration: 0.15,
+    ease: cubicBezier(0.69, 0.28, 0.75, 1.22),
+  };
 
   return (
     <motion.div
-      initial={{
-        left: Utils.positions.past.left,
-        top: Utils.positions.past.top,
-        width: Utils.positions.past.width,
-        height: Utils.positions.past.height,
-      }}
-      animate={{
-        left: Utils.positions.current.left,
-        top: Utils.positions.current.top,
-        width: Utils.positions.current.width,
-        height: Utils.positions.current.height,
-      }}
-      transition={{
-        duration: 0.1,
-        ease: circIn,
-      }}
+      initial={initial}
+      animate={animate}
+      transition={transition}
       data-index={reveals?.index}
       className={cn("absolute h-7 bg-selected rounded-md pointer-events-none", className)}
       {...props}></motion.div>
