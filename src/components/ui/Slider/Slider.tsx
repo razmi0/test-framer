@@ -1,4 +1,4 @@
-import usePosition, { getValueOrDefault } from "@/hooks/usePosition";
+import usePosition, { getValueOrDefault } from "@/components/ui/Slider/usePosition";
 import { cn } from "@/lib/utils";
 import { cubicBezier, motion, type MotionProps } from "framer-motion";
 

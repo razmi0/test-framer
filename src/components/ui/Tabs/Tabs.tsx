@@ -1,8 +1,8 @@
-import usePosition from "@/hooks/usePosition";
+import usePosition from "@/components/ui/Slider/usePosition";
 import { cn, getComponentDisplayName, validAndHasProps } from "@/lib/utils";
 import type { HTMLAttributes, ReactNode } from "react";
 import { Children, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import Slider from "../Slider";
+import Slider from "../Slider/Slider";
 import type { RevealType, TabType } from "./types";
 
 const buildReveals = ({ size, trueAt }: { size: number; trueAt?: number | null }) => {

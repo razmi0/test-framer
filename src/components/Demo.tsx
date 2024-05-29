@@ -1,11 +1,13 @@
 import { cn, format } from "@/lib/utils";
 import { Power } from "lucide-react";
 import { useState, type HTMLAttributes, type MouseEvent, type ReactNode } from "react";
-import Slider from "../Slider";
-import Tabs from "./Tabs";
+import Buttons from "./ui/Buttons/Buttons";
+import Slider from "./ui/Slider/Slider";
+import Tabs from "./ui/Tabs/Tabs";
 
 export type ActiveType = { value: string; showColor: boolean };
 
+const sliderStyle = "bg-selected rounded-md ring-1 ring-inset ring-neutral-900/80 border border-neutral-100/20";
 const values = ["urophylia", "lupus", "erotomania", "dyslexia"];
 
 const DemoTabs = () => {
@@ -23,9 +25,7 @@ const DemoTabs = () => {
               {format(value)}
             </Tabs.Trigger>
           ))}
-          <Slider
-            className={cn("bg-selected rounded-md ring-1 ring-inset ring-neutral-900/80 border border-neutral-100/20")}
-          />
+          <Slider className={sliderStyle} />
         </Tabs.Nav>
         {values.map((value, i) => (
           <Tabs.Content key={i} value={value}>
@@ -58,4 +58,21 @@ const ModeToggle = ({ className, children, active, ...props }: ModeToggleProps) 
   );
 };
 
-export default DemoTabs;
+const DemoButton = () => {
+  return (
+    <Buttons.Group>
+      <Buttons.Button>Button 1</Buttons.Button>
+      <Buttons.Button>Button 2</Buttons.Button>
+      <Buttons.Button>Button 3</Buttons.Button>
+      <Buttons.Button>Button 4</Buttons.Button>
+      <Slider className={sliderStyle} />
+    </Buttons.Group>
+  );
+};
+
+const Demo = {
+  Tabs: DemoTabs,
+  Button: DemoButton,
+};
+
+export default Demo;

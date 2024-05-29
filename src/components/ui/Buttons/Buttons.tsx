@@ -1,7 +1,7 @@
-import usePosition from "@/hooks/usePosition";
+import usePosition from "@/components/ui/Slider/usePosition";
 import { cn, getComponentDisplayName, validAndHasProps } from "@/lib/utils";
 import { Children, MouseEvent, useMemo, useRef, type HTMLAttributes, type ReactNode } from "react";
-import Slider from "./Slider";
+import Slider from "../Slider/Slider";
 
 const ButtonGroup = ({ children, className }: { children: ReactNode; className?: string }) => {
   const { update, position } = usePosition();
@@ -26,7 +26,7 @@ const ButtonGroup = ({ children, className }: { children: ReactNode; className?:
           );
       }
     });
-  }, [children]);
+  }, [children, position]);
 
   return <div className={className}>{AugmentedButtons}</div>;
 };
@@ -54,9 +54,9 @@ const Button = ({ children, className, updatePosition, ...props }: ButtonProps) 
 
 Button.displayName = "Button";
 
-const Root = {
+const Buttons = {
   Group: ButtonGroup,
   Button,
 };
 
-export default Root;
+export default Buttons;
