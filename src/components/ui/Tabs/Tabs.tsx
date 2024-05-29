@@ -40,7 +40,7 @@ const usePositions = (initial: PositionsType = defaultInitial) => {
 };
 
 type TabType = ("TabNav" | "TabContent" | "TabTrigger" | "TabSlider" | "Tabs") & string;
-const Tabs = ({ children, defaultSelected = "" }: { children: ReactNode; defaultSelected?: string }) => {
+const Root = ({ children, defaultSelected = "" }: { children: ReactNode; defaultSelected?: string }) => {
   const [reveals, setReveals] = useState<RevealType>({ reveals: [], index: 0, pastIndex: 0 });
   const { position, update } = usePositions();
 
@@ -65,23 +65,24 @@ const Tabs = ({ children, defaultSelected = "" }: { children: ReactNode; default
       /** */
       switch (childType) {
         case "TabNav": {
-          const navChildren = Children.map(child.props.children, (trigger, i) => {
-            const name = trigger.type.name;
-            if (!Utils.validAndHasProps(trigger)) return trigger;
+          const navChildren = Children.map(child.props.children, (navChild, i) => {
+            const name = navChild.type.name;
+            console.log(navChild.props.id);
+            if (!Utils.validAndHasProps(navChild)) return navChild;
 
             switch (name) {
               case "TabTrigger": {
-                const { children, value, selected } = trigger.props;
-                if (!value) return trigger;
+                const { children, value, selected } = navChild.props;
+                if (!value) return navChild;
 
                 selected && setReveals((prev) => ({ ...prev, index: i }));
-                const userOnclick = trigger.props.onClick;
+                const userOnclick = navChild.props.onClick;
                 Utils.lookupValues.set(value, i);
                 const getSelected = (value: string) => reveals.reveals[Utils.lookupValues.get(value) || 0];
 
                 return (
                   <TabTrigger
-                    {...trigger.props}
+                    {...navChild.props}
                     getSelected={getSelected}
                     updatePos={update}
                     onClick={() => {
@@ -93,7 +94,7 @@ const Tabs = ({ children, defaultSelected = "" }: { children: ReactNode; default
                 );
               }
               case "TabSlider": {
-                return <TabSlider {...trigger.props} positions={position} reveals={reveals} />;
+                return <TabSlider {...navChild.props} positions={position} reveals={reveals} />;
               }
             }
           });
@@ -119,7 +120,7 @@ const Tabs = ({ children, defaultSelected = "" }: { children: ReactNode; default
   return <>{AugmentedChildren}</>;
 };
 
-Tabs.displayName = "Tabs";
+Root.displayName = "Tabs";
 
 interface TabTriggerProps extends HTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
@@ -245,5 +246,12 @@ const TabSlider = ({ className, reveals, positions, ...props }: TabSliderProps) 
 
 TabSlider.displayName = "TabSlider";
 
+const Tabs = {
+  Root,
+  TabTrigger,
+  TabContent,
+  TabNav,
+  TabSlider,
+} as const;
+
 export default Tabs;
-export { TabContent, TabNav, TabSlider, TabTrigger };
