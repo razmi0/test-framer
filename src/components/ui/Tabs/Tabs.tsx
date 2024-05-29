@@ -161,11 +161,11 @@ interface TabNavProps extends HTMLAttributes<HTMLDivElement> {
 const TabNav = ({ children, className, ...props }: TabNavProps) => {
   return (
     <>
-      <div
+      <nav
         className={cn(`relative flex-wrap flex gap-3 items-center justify-center rounded-md px-2 py-1`, className)}
         {...props}>
         {children}
-      </div>
+      </nav>
     </>
   );
 };
