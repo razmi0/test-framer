@@ -1,5 +1,5 @@
+import type { ActiveType } from "@/App";
 import { cn } from "@/lib/utils";
-import type { ActiveType } from "@/types/types";
 
 type PanelProps = { active: ActiveType; children: React.ReactNode };
 const Panel = ({ active, children }: PanelProps) => {

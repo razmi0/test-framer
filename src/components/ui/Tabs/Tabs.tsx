@@ -2,47 +2,13 @@ import { cn } from "@/lib/utils";
 import { cubicBezier, motion, type MotionProps } from "framer-motion";
 import type { HTMLAttributes, ReactNode } from "react";
 import { Children, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import type { RevealType } from "./utils";
+import type { PositionsType, RevealType, TabType } from "./types";
 import Utils from "./utils";
 
-type PositionType = {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-};
-type PositionsType = {
-  past: PositionType;
-  current: PositionType;
-};
-
-const defaultInitial = {
-  past: { left: 0, top: 0, width: 0, height: 0 },
-  current: { left: 0, top: 0, width: 0, height: 0 },
-};
-
-const usePositions = (initial: PositionsType = defaultInitial) => {
-  const [positions, setPositions] = useState<PositionsType>(initial);
-
-  const update = (elementRef: React.RefObject<HTMLButtonElement> | null) => {
-    const element = elementRef?.current;
-    if (!element) return;
-    const newValues = {
-      left: element.offsetLeft,
-      width: element.offsetWidth,
-      height: element.offsetHeight,
-      top: element.offsetTop,
-    };
-    setPositions((prev) => ({ past: prev.current, current: newValues }));
-  };
-
-  return { position: positions, update };
-};
-
-type TabType = ("TabNav" | "TabContent" | "TabTrigger" | "TabSlider" | "Tabs") & string;
-const Root = ({ children, defaultSelected = "" }: { children: ReactNode; defaultSelected?: string }) => {
+type RootProps = { children: ReactNode; defaultSelected?: string };
+const Root = ({ children, defaultSelected = "" }: RootProps) => {
   const [reveals, setReveals] = useState<RevealType>({ reveals: [], index: 0, pastIndex: 0 });
-  const { position, update } = usePositions();
+  const { position, update } = Utils.usePositions();
 
   const toggleReveal = (i: number) => {
     setReveals((prev) => {
@@ -67,7 +33,6 @@ const Root = ({ children, defaultSelected = "" }: { children: ReactNode; default
         case "TabNav": {
           const navChildren = Children.map(child.props.children, (navChild, i) => {
             const name = navChild.type.name;
-            console.log(navChild.props.id);
             if (!Utils.validAndHasProps(navChild)) return navChild;
 
             switch (name) {

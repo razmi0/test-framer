@@ -6,7 +6,8 @@ import Background from "./components/ui/Background";
 import Section from "./components/ui/Section";
 import Tabs from "./components/ui/Tabs/Tabs";
 import { cn, format } from "./lib/utils";
-import type { ActiveType } from "./types/types";
+
+export type ActiveType = { value: string; showColor: boolean };
 
 const values = ["urophylia", "lupus", "erotomania", "dyslexia"];
 
@@ -28,18 +29,18 @@ const App = () => {
           <Tabs.TabSlider className={cn("ring-1 ring-inset ring-neutral-900/80 border border-neutral-100/20")} />
         </Tabs.TabNav>
         <Tabs.TabContent value={values[0]} className="z-10 grow">
-          <Pill>
-            <p className="text-neutral-100">Hello</p>
+          <Pill active={active}>
+            <p className="text-neutral-100">HelloHello</p>
           </Pill>
         </Tabs.TabContent>
         <Tabs.TabContent value={values[1]} className="z-10 grow">
           <Panel active={active}>
-            <p className="text-neutral-100">World</p>
+            <p className="text-neutral-100">WorldHelloHelloHelloHello</p>
           </Panel>
         </Tabs.TabContent>
         <Tabs.TabContent value={values[2]} className="z-10 grow">
-          <Pill>
-            <p className="text-neutral-100">World</p>
+          <Pill active={active}>
+            <p className="text-neutral-100">WorldHelloHelloHelloHelloHello</p>
           </Pill>
         </Tabs.TabContent>
         <Tabs.TabContent value={values[3]} className="z-10 grow">
