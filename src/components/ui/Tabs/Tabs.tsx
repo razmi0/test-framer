@@ -87,7 +87,7 @@ const Root = ({ children, defaultSelected = "" }: RootProps) => {
           return child;
       }
     });
-  }, [reveals, children]);
+  }, [reveals, children, position]);
 
   return <>{AugmentedChildren}</>;
 };
