@@ -1,14 +1,22 @@
-import { cn } from "@/lib/utils";
-import { motion, type MotionProps } from "framer-motion";
+import usePosition from "@/hooks/usePosition";
+import { cn, getComponentDisplayName, validAndHasProps } from "@/lib/utils";
 import type { HTMLAttributes, ReactNode } from "react";
 import { Children, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import type { RectSliderType, RevealType, TabType } from "./types";
-import Utils from "./utils";
+import Slider from "../Slider";
+import type { RevealType, TabType } from "./types";
+
+const buildReveals = ({ size, trueAt }: { size: number; trueAt?: number | null }) => {
+  const reveals = new Array(size).fill(false);
+  if (typeof trueAt === "number" && (trueAt >= 0 || trueAt < reveals.length)) reveals[trueAt] = true;
+  return reveals;
+};
+
+const lookupValues = new Map<string, number>();
 
 type RootProps = { children: ReactNode; defaultSelected?: string };
 const Root = ({ children, defaultSelected = "" }: RootProps) => {
   const [reveals, setReveals] = useState<RevealType>({ reveals: [], index: 0, pastIndex: 0 });
-  const { position, update } = Utils.usePositions();
+  const { position, update } = usePosition();
 
   const toggleReveal = (i: number) => {
     setReveals((prev) => {
@@ -19,15 +27,15 @@ const Root = ({ children, defaultSelected = "" }: RootProps) => {
   };
 
   useLayoutEffect(() => {
-    const defaultSelectedIndex = Utils.lookupValues.has(defaultSelected) ? Utils.lookupValues.get(defaultSelected) : 0;
-    const initialReveals = Utils.buildReveals({ size: Utils.lookupValues.size, trueAt: defaultSelectedIndex });
+    const defaultSelectedIndex = lookupValues.has(defaultSelected) ? lookupValues.get(defaultSelected) : 0;
+    const initialReveals = buildReveals({ size: lookupValues.size, trueAt: defaultSelectedIndex });
     setReveals((prev) => ({ ...prev, reveals: initialReveals }));
   }, []);
 
   const AugmentedChildren = useMemo(() => {
     return Children.map(children, (child) => {
-      if (!Utils.validAndHasProps(child)) return child;
-      const childType = Utils.getComponentDisplayName(child) as TabType;
+      if (!validAndHasProps(child)) return child;
+      const childType = getComponentDisplayName(child) as TabType;
       /**
        *
        */
@@ -35,7 +43,7 @@ const Root = ({ children, defaultSelected = "" }: RootProps) => {
         case "TabNav": {
           const navChildren = Children.map(child.props.children, (navChild, i) => {
             const name = navChild.type.name;
-            if (!Utils.validAndHasProps(navChild)) return navChild;
+            if (!validAndHasProps(navChild)) return navChild;
 
             switch (name) {
               case "TabTrigger": {
@@ -44,8 +52,8 @@ const Root = ({ children, defaultSelected = "" }: RootProps) => {
 
                 selected && setReveals((prev) => ({ ...prev, index: i }));
                 const userOnclick = navChild.props.onClick;
-                Utils.lookupValues.set(value, i);
-                const getSelected = (value: string) => reveals.reveals[Utils.lookupValues.get(value) || 0];
+                lookupValues.set(value, i);
+                const getSelected = (value: string) => reveals.reveals[lookupValues.get(value) || 0];
                 const onClick = () => {
                   toggleReveal(i);
                   userOnclick && userOnclick();
@@ -57,8 +65,8 @@ const Root = ({ children, defaultSelected = "" }: RootProps) => {
                   </TabTrigger>
                 );
               }
-              case "TabSlider": {
-                return <TabSlider {...navChild.props} positions={position.slider} reveals={reveals} />;
+              case "Slider": {
+                return <Slider {...navChild.props} data-index={reveals.index} position={position} />;
               }
             }
           });
@@ -67,7 +75,7 @@ const Root = ({ children, defaultSelected = "" }: RootProps) => {
         }
 
         case "TabContent": {
-          const getSelected = (value: string) => reveals.reveals[Utils.lookupValues.get(value) || 0];
+          const getSelected = (value: string) => reveals.reveals[lookupValues.get(value) || 0];
           return (
             <TabContent value={child.props.value} getSelected={getSelected}>
               {child.props.children}
@@ -93,7 +101,7 @@ interface TabTriggerProps extends HTMLAttributes<HTMLButtonElement> {
   selected?: boolean;
   className?: string;
   getSelected?: (value: string) => boolean;
-  updatePos?: ReturnType<typeof Utils.usePositions>["update"];
+  updatePos?: ReturnType<typeof usePosition>["update"];
 }
 
 const TabTrigger = ({ children, value, onClick, className, getSelected, updatePos, ...props }: TabTriggerProps) => {
@@ -101,11 +109,11 @@ const TabTrigger = ({ children, value, onClick, className, getSelected, updatePo
   const ref = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (selected && updatePos) updatePos({ ref, target: "slider" });
+    if (selected && updatePos) updatePos({ ref });
   }, [selected]);
 
-  const handleOnCLick = () => {
-    if (updatePos) updatePos({ ref, target: "slider" });
+  const handleOnClick = () => {
+    if (updatePos) updatePos({ ref });
     onClick && onClick();
   };
 
@@ -114,7 +122,8 @@ const TabTrigger = ({ children, value, onClick, className, getSelected, updatePo
       ref={ref}
       key={value}
       data-selected={selected}
-      onMouseDown={handleOnCLick}
+      onMouseDown={handleOnClick}
+      onClick={() => {}}
       data-value={value}
       className={cn(
         "relative text-sm font-normal px-5 py-1 text-white transition-all ring-offset-transparent rounded-lg flex items-center justify-center",
@@ -163,31 +172,11 @@ const TabNav = ({ children, className, ...props }: TabNavProps) => {
 
 TabNav.displayName = "TabNav";
 
-interface TabSliderProps extends MotionProps {
-  className?: string;
-  reveals?: RevealType;
-  positions?: RectSliderType;
-}
-const TabSlider = ({ className, reveals, positions, ...props }: TabSliderProps) => {
-  return (
-    <motion.div
-      initial={Utils.getValueOrDefault(positions?.past)}
-      animate={Utils.getValueOrDefault(positions?.current)}
-      transition={Utils.transition}
-      data-index={reveals?.index}
-      className={cn("absolute h-7 bg-selected rounded-md pointer-events-none", className)}
-      {...props}></motion.div>
-  );
-};
-
-TabSlider.displayName = "TabSlider";
-
 const Tabs = {
   Root,
   Trigger: TabTrigger,
   Content: TabContent,
   Nav: TabNav,
-  Slider: TabSlider,
 } as const;
 
 export default Tabs;

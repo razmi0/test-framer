@@ -1,6 +1,7 @@
 import { cn, format } from "@/lib/utils";
 import { Power } from "lucide-react";
 import { useState, type HTMLAttributes, type MouseEvent, type ReactNode } from "react";
+import Slider from "../Slider";
 import Tabs from "./Tabs";
 
 export type ActiveType = { value: string; showColor: boolean };
@@ -22,7 +23,9 @@ const DemoTabs = () => {
               {format(value)}
             </Tabs.Trigger>
           ))}
-          <Tabs.Slider className={cn("ring-1 ring-inset ring-neutral-900/80 border border-neutral-100/20")} />
+          <Slider
+            className={cn("bg-selected rounded-md ring-1 ring-inset ring-neutral-900/80 border border-neutral-100/20")}
+          />
         </Tabs.Nav>
         {values.map((value, i) => (
           <Tabs.Content key={i} value={value}>
