@@ -4,28 +4,59 @@ import {
   Children,
   MouseEvent,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
   type HTMLAttributes,
   type ReactNode,
+  forwardRef,
 } from "react";
 import Slider from "../Slider/Slider";
-import { SelectedType } from "./types";
+// import { SelectedType } from "./types";
 
-let buttonTemp: SelectedType[] = [];
-
+let buttonTemp: boolean[] = [];
+let indexDefaulted: number | null = null;
 const ButtonGroup = ({ children, className }: { children: ReactNode; className?: string }) => {
-  const [selected, setSelected] = useState<SelectedType[]>([]);
+  const [selected, setSelected] = useState<boolean[]>([]);
   const { update, position } = usePosition();
 
+  useEffect(() => console.log(selected), [selected]);
+
   const toggleSelected = (index: number) => {
-    const activeIndex = selected.findIndex((item) => item.index === index);
-    if (activeIndex === -1) return;
-    const newSelected = [...selected];
-    newSelected[activeIndex].selected = !newSelected[activeIndex].selected;
-    setSelected(newSelected);
+    setSelected((prev) => {
+      const temp = new Array(prev.length).fill(false);
+      temp[index] = !temp[index];
+      return temp;
+    });
+  };
+
+  const ButtonHoc = ({ onClick, index, children, ...props }: any) => {
+    const ref = useRef<HTMLButtonElement>(null);
+
+    const handleOnClick = () => {
+      toggleSelected(index);
+      "onClick" in props && props.onClick();
+    };
+
+    return (
+      <Button
+        {...props}
+        ref={ref}
+        onClick={handleOnClick}
+        updatePosition={update}
+        selected={selected[index]}
+        data-index={index}>
+        {children}
+      </Button>
+    );
+  };
+
+  const SliderHoc = ({ children, ...props }: any) => {
+    return (
+      <Slider {...props} position={position}>
+        {children}
+      </Slider>
+    );
   };
 
   const AugmentedButtons = useMemo(() => {
@@ -36,33 +67,17 @@ const ButtonGroup = ({ children, className }: { children: ReactNode; className?:
 
       switch (childType) {
         case "Button": {
-          if (selected?.[i].selected) {
-            buttonTemp.push({ selected: true, index: i });
-          } else {
-            buttonTemp.push(selected[i]);
-          }
-          const onClick = () => {
-            toggleSelected(i);
-            child.props.onClick && child.props.onClick();
-          };
+          buttonTemp.push(false);
+          if (child.props.defaultSelected) indexDefaulted = i;
 
           return (
-            <Button
-              {...child.props}
-              onClick={onClick}
-              updatePosition={update}
-              data-index={i}
-              selected={selected?.[i]?.selected || false}>
+            <ButtonHoc {...child.props} index={i}>
               {child.props.children}
-            </Button>
+            </ButtonHoc>
           );
         }
         case "Slider": {
-          return (
-            <Slider {...child.props} position={position}>
-              {child.props.children}
-            </Slider>
-          );
+          return <SliderHoc {...child.props}>{child.props.children}</SliderHoc>;
         }
 
         default:
@@ -71,16 +86,12 @@ const ButtonGroup = ({ children, className }: { children: ReactNode; className?:
     });
 
     return hocs;
-  }, [children, position, selected]);
-
-  useLayoutEffect(() => {
-    setSelected(buttonTemp);
-    console.log("buttonTemp", buttonTemp);
-  }, []);
+  }, [children, selected]);
 
   useEffect(() => {
-    console.log(selected);
-  }, [selected]);
+    if (indexDefaulted) buttonTemp[indexDefaulted] = true;
+    setSelected(buttonTemp);
+  }, [children]);
 
   return <div className={className}>{AugmentedButtons}</div>;
 };
@@ -94,35 +105,31 @@ interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
   selected?: boolean;
   defaultSelected?: boolean;
 }
-const Button = ({ children, className, updatePosition, selected, defaultSelected, ...props }: ButtonProps) => {
-  const ref = useRef<HTMLButtonElement>(null);
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, className, updatePosition, selected, defaultSelected, ...props }, ref) => {
+    const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+      if ("onClick" in props) props.onClick?.(e);
+      ref && updatePosition && updatePosition({ ref });
+    };
 
-  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
-    if ("onClick" in props) props.onClick?.(e);
-    updatePosition && updatePosition({ ref });
-  };
-
-  useEffect(() => {
-    updatePosition && updatePosition({ ref });
-  }, []);
-
-  return (
-    <button
-      {...props}
-      onMouseDown={handleClick}
-      data-selected={selected}
-      ref={ref}
-      className={cn(
-        "relative text-sm font-normal px-5 py-1 text-white transition-all ring-offset-transparent rounded-lg flex items-center justify-center",
-        "data-[selected=false]:text-neutral-500/50 hover:data-[selected=false]:text-neutral-200/80",
-        "active:ring-2 active:ring-offset-2 active:ring-neutral-800",
-        className
-      )}
-      type="button">
-      {children}
-    </button>
-  );
-};
+    return (
+      <button
+        {...props}
+        onMouseDown={handleClick}
+        data-selected={selected}
+        ref={ref}
+        className={cn(
+          "relative text-sm font-normal px-5 py-1 text-white transition-all ring-offset-transparent rounded-lg flex items-center justify-center",
+          "data-[selected=false]:text-neutral-500/50 hover:data-[selected=false]:text-neutral-200/80",
+          "active:ring-2 active:ring-offset-2 active:ring-neutral-800",
+          className
+        )}
+        type="button">
+        {children}
+      </button>
+    );
+  }
+);
 
 Button.displayName = "Button";
 
